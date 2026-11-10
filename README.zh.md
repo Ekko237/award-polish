@@ -8,7 +8,7 @@
 
 ## 用它打磨过的作品
 
-![用 award-site 打磨过的六个作品](media/showcase-zh.png)
+![用 award-site 打磨过的六个作品，电脑版和手机版](media/showcase-zh-v2.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
@@ -17,13 +17,11 @@
 - [顺路侠](https://ekko237.github.io/campus-errand/?lang=zh)（[源码](https://github.com/Ekko237/campus-errand)）：校园跑腿互助 App 原型。
 - [三角洲国际服改枪码](https://dfgqm.com/)：游戏改枪码站，做了两轮改版。
 
-<sub>分数是这个技能自己的 100 分评审分：两位独立的 AI 评审用固定的定标卷校正后取平均，前一个数是第一批改动之前，后一个数是上线的那一版。</sub>
-
 同一份需求，大家做出来的功能差不多，一个产品能不能拉开差距，靠的是视觉、交互、动效和流畅度。光靠 AI 自己打磨很难做好：它给自己打分偏松，小修小补会卡住，「做得更好」也没有终点。这个技能把打磨变成一个有尺子的循环。
 
 能在浏览器里打开的界面都适用，网站、网页应用、触屏原型、平板和手机上的 App 界面都行，因为检查脚本靠无头浏览器来跑。
 
-Awwwards 只是我们对照的标杆：上面打了分的四个作品，在它自己的 100 分尺子上最后都在 83.0 到 85.5 分之间，大约是每项 Honorable Mention 的水平，还没有一个拿过 Awwwards 奖。
+Awwwards 只是我们对照的标杆，上面这些作品还没有一个拿过 Awwwards 奖。
 
 循环怎么走：
 
