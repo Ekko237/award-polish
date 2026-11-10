@@ -8,8 +8,9 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 ## Polished with award-site
 
-![Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, all polished with this skill](media/showcase.png)
+![Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, all polished with this skill](media/showcase.jpg)
 
+- [Island Evolution](https://islandevolution.com/): a browser puzzle game's website; the scroll-driven walkthrough of one game is the part to see.
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults): a hackathon build by a team of four, a voice-first tablet app for older adults plus a phone app for their families.
 - [SONIFIZZ Poster Kiosk](https://ekko237.github.io/sonifizz-poster/) ([code](https://github.com/Ekko237/sonifizz-poster)): a touch-kiosk prototype for a festival booth that prints your own poster in a minute.
@@ -22,7 +23,7 @@ Given the same brief, everyone ships about the same features. What makes one pro
 
 Anything that runs in a browser fits, from marketing sites to tablet app interfaces, because the checks drive a headless browser.
 
-Awwwards is the bar, not a promise: the three scored projects above finished between 83.8 and 85.5 on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
+Awwwards is the bar, not a promise: the four scored projects above finished between 83.0 and 85.5 on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
 
 How the loop works:
 
