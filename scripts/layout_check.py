@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import re
+from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 JS = r"""
@@ -196,6 +197,7 @@ def main():
     ap.add_argument('--max-h1-lines', type=int, default=2)
     ap.add_argument('--states', help='状态数组 JSON，每项含名字、网址、步骤')
     ap.add_argument('--min-font', type=float, default=12, help='实际显示字号低于这个像素数就报 smallText（只报告不判不过），0 关掉')
+    ap.add_argument('--clock', type=datetime.fromisoformat, help='把页面时钟固定在这个本地时刻（如 2026-11-09T12:30）：问候语、营业状态、日期跟着钟点变的页面，每次截图和量出的坐标一致')
     a = ap.parse_args()
     widths = [int(x) for x in a.widths.split(',')]
     if not widths or min(widths) <= 0 or min(a.height, a.phone_height) <= 0 or min(a.settle, a.slices, a.max_h1_lines) < 0:
@@ -220,6 +222,8 @@ def main():
             for index, (url, state, steps) in enumerate(cases, 1):
                 ctx = browser.new_context(**context_options(w, a.height, a.phone_height))
                 page = ctx.new_page()
+                if a.clock:
+                    page.clock.set_fixed_time(a.clock)
                 errors, failed = [], []
                 page.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
                 page.on('pageerror', lambda e: errors.append(str(e)))

@@ -1,6 +1,7 @@
 import argparse
 import platform
 import re
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -66,6 +67,7 @@ def main():
     ap.add_argument('--settle', type=int, default=1500)
     ap.add_argument('--dismiss')
     ap.add_argument('--full', action='store_true')
+    ap.add_argument('--clock', type=datetime.fromisoformat, help='把页面时钟固定在这个本地时刻（如 2026-11-09T12:30），几列内容随钟点变时用它')
     a = ap.parse_args()
     if a.width <= 0 or a.height < 0 or a.settle < 0:
         ap.error('width 必须大于 0，height 和 settle 不能为负数')
@@ -91,6 +93,8 @@ def main():
                     for index, (_, base) in enumerate(sites, 1):
                         context = browser.new_context(**context_options(width))
                         page = context.new_page()
+                        if a.clock:
+                            page.clock.set_fixed_time(a.clock)
                         page.goto(urljoin(base.rstrip('/') + '/', path), wait_until='load')
                         page.wait_for_timeout(a.settle)
                         if a.dismiss:
