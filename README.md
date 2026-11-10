@@ -19,7 +19,7 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
 
-Besides the four above, it has polished a campus errand app prototype ([live](https://ekko237.github.io/campus-errand/), [code](https://github.com/Ekko237/campus-errand), Chinese only for now). Anything that runs in a browser fits, because the checks drive a headless browser.
+Besides the four above, it has polished a campus errand app prototype ([live](https://ekko237.github.io/campus-errand/?lang=en), [code](https://github.com/Ekko237/campus-errand)). Anything that runs in a browser fits, because the checks drive a headless browser.
 
 Awwwards is the bar, not a promise: the scored projects above went from 68.5 and 75.5 to 83.8 and 84.0 on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
 
