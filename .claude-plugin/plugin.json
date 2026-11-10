@@ -1,6 +1,6 @@
 {
   "name": "award-site",
-  "description": "Polish a web product to Awwwards level: study real award winners, then improve in batches scored by independent reviewers on one calibrated ruler, with blind side-by-side checks against the best version so far and a layout checker that catches overflow, covered buttons and clipped elements at five widths.",
+  "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar: improve in batches scored by independent reviewers on one calibrated ruler, with blind side-by-side checks against the best version so far and a layout checker for overflow, covered buttons and clipped elements at five widths.",
   "version": "1.0.0",
   "author": {
     "name": "Ekko237",
@@ -8,5 +8,14 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/Ekko237/award-site",
-  "keywords": ["web-design", "awwwards", "design-review", "redesign", "ui-polish", "claude-skills", "codex-skills"]
+  "keywords": [
+    "web-design",
+    "awwwards",
+    "design-review",
+    "redesign",
+    "ui-polish",
+    "agent-skills",
+    "claude-skills",
+    "codex-skills"
+  ]
 }

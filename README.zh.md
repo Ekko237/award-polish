@@ -1,6 +1,8 @@
 # award-site
 
-**一个给 Claude Code / Codex 用的技能：把网页产品打磨到 Awwwards 获奖水平，评审分数靠得住。**
+**一个打磨网站、网页应用和 App 界面的 agent 技能：拿 Awwwards 获奖站当标杆，评审分数靠得住。**
+
+技能本身就是 Markdown 文档加 Python 脚本，能读文件、能跑命令的编程 agent 都能用；Claude Code 和 Codex 可以直接当技能装。
 
 [English](README.md)
 
@@ -8,7 +10,13 @@
 
 <sub>在一个故意埋了问题的演示站上跑了一批：第一次布局体检，15 个「页面 × 宽度」组合全部不过；16 个小提交以后，14 个通过。剩下那一个是手机上首页标题排成三行，标题文字属于搜索字段，改版不能改字。</sub>
 
-同一份需求，大家做出来的功能差不多，拉开差距靠视觉、交互、动效和流畅度。光靠 AI 自己打磨很难做好：它给自己打分偏松，小修小补会卡住，「做得更好」也没有终点。这个技能把打磨变成一个有尺子的循环：
+同一份需求，大家做出来的功能差不多，一个产品能不能拉开差距，靠的是视觉、交互、动效和流畅度。光靠 AI 自己打磨很难做好：它给自己打分偏松，小修小补会卡住，「做得更好」也没有终点。这个技能把打磨变成一个有尺子的循环。
+
+它打磨过内容资料站、像素游戏的官网、点餐推荐的网页应用、校园跑腿 App 原型、展位大屏原型，还有黑客松上做的老人用平板 App 和子女用的手机端。能在浏览器里打开的界面都适用，因为检查脚本靠无头浏览器来跑。
+
+Awwwards 只是我们对照的标杆：目前用它打磨过的真实项目，在它自己的 100 分尺子上到了 80 多分，大约是每项 Honorable Mention 的水平，还没有一个拿过 Awwwards 奖。
+
+循环怎么走：
 
 - **先看标杆**：实际打开 6-8 个近期同类的 Awwwards / Webby / FWA 获奖站，记下能借的手法。
 - **按批推进**：评审一次给出完整问题清单，AI 一口气改完，一条改动一个提交，再请下一次评审。
@@ -41,15 +49,16 @@ python3 skills/award-site/scripts/layout_check.py https://你的网站 --out che
 
 旧版本先 `/plugin marketplace add Ekko237/award-site`，再 `/plugin install award-site@award-site`。
 
-**Codex 或 Claude Code（普通技能）**：
+**任何 agent（普通技能文件夹）**：
 
 ```bash
-bash install.sh          # 自动装到 ~/.claude/skills 和/或 ~/.codex/skills
-bash install.sh claude   # 只装 Claude Code
-bash install.sh codex    # 只装 Codex
+bash install.sh                   # 自动装到已有的 ~/.claude/skills 和/或 ~/.codex/skills
+bash install.sh claude            # 只装 Claude Code
+bash install.sh codex             # 只装 Codex
+bash install.sh /你的/skills/目录   # 别的 agent：装到它读取技能的那个文件夹
 ```
 
-装好后，说「把这个网站打磨到获奖水平」「改版一下这个网站」，或者直接用 `/award-site`。技能正文是英文写的，AI 跟你说话照样用你的语言。
+没有技能文件夹的 agent，直接让它读 `skills/award-site/SKILL.md` 就行。装好后，说「把这个网站打磨到获奖水平」或者「用 award-site 技能」；支持斜杠命令的 agent 也可以用 `/award-site`。技能正文是英文写的，AI 跟你说话照样用你的语言。
 
 ## 里面有什么
 

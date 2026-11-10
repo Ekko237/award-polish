@@ -1,6 +1,8 @@
 # award-site
 
-**A Claude Code / Codex skill that polishes a web product to Awwwards level, with reviews you can trust.**
+**An agent skill for polishing websites, web apps and app interfaces, with Awwwards winners as the bar and reviews you can trust.**
+
+Plain Markdown plus Python scripts, so any coding agent that can read files and run commands can use it; Claude Code and Codex load it as a skill directly.
 
 [中文说明](README.zh.md)
 
@@ -8,7 +10,13 @@
 
 <sub>One batch on a demo site with planted problems. The first layout check failed 15 of 15 page-width combinations; after 18 small commits, 14 pass. The one left is a heading that stays three lines on phones because its text is a search field the redesign may not reword.</sub>
 
-Given the same brief, everyone ships about the same features. What makes one site stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler:
+Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
+
+It has been used on a content site, a pixel game's website, a food recommendation web app, a campus errand app prototype, a booth-screen prototype, and a hackathon tablet app for older adults with a phone companion for their families. Anything that runs in a browser fits, because the checks drive a headless browser.
+
+Awwwards is the bar, not a promise: so far it has taken real projects into the 80s on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
+
+How the loop works:
 
 - **Study the bar first**: open 6-8 recent Awwwards / Webby / FWA winners of the same kind, note the techniques worth borrowing.
 - **Work in batches**: reviewers hand over one complete issue list, the agent fixes all of it, one commit per fix, then the next review.
@@ -41,15 +49,16 @@ You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: h
 
 On older versions: `/plugin marketplace add Ekko237/award-site`, then `/plugin install award-site@award-site`.
 
-**Codex or Claude Code (plain skill)**:
+**Any agent (plain skill folder)**:
 
 ```bash
-bash install.sh          # installs to ~/.claude/skills and/or ~/.codex/skills
-bash install.sh claude   # Claude Code only
-bash install.sh codex    # Codex only
+bash install.sh                   # ~/.claude/skills and/or ~/.codex/skills, whichever exists
+bash install.sh claude            # Claude Code only
+bash install.sh codex             # Codex only
+bash install.sh /path/to/skills   # any other agent: the folder it loads skills from
 ```
 
-Then say "polish this website to award level", "redesign this site", or run `/award-site`.
+Agents without a skills folder can be pointed at `skills/award-site/SKILL.md` directly. Then ask it to "polish this site to award level" or "use the award-site skill"; agents with slash commands also take `/award-site`.
 
 ## What is inside
 
