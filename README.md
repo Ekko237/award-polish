@@ -12,7 +12,7 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
 
-It has been used on a content site, a pixel game's website, a food recommendation web app, a campus errand app prototype, a booth-screen prototype, and a hackathon tablet app for older adults with a phone companion for their families. Anything that runs in a browser fits, because the checks drive a headless browser.
+It has been used on a content site, a pixel game's website, a food recommendation web app, a [campus errand app prototype](https://ekko237.github.io/campus-errand/?lang=en), a booth-screen prototype, and a hackathon tablet app for older adults with a phone companion for their families. Anything that runs in a browser fits, because the checks drive a headless browser.
 
 Awwwards is the bar, not a promise: so far it has taken real projects into the 80s on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
 
