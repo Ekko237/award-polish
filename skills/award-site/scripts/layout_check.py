@@ -142,7 +142,9 @@ KEEP_HEADINGS = r"""
     const covers = [];
     for (const [x,y] of points) {
       if (x < 0 || x >= vw || y < 0 || y >= vh) continue;
-      const hit = document.elementFromPoint(x,y);
+      let hit = document.elementFromPoint(x,y);
+      // when a fixed or sticky overlay covers it, report the outermost overlay (cookie banner, bottom bar), not a small element inside it
+      for (let q = hit; q && q !== document.body; q = q.parentElement) if (/fixed|sticky/.test(getComputedStyle(q).position)) hit = q;
       // hitting the element's own ancestor means the corner is outside a rounded edge, not covered; children of one overlay are reported once as that overlay
       if (!hit || hit === el || el.contains(hit) || hit.contains(el)) continue;
       const i = covers.findIndex(c => c.el.contains(hit) || hit.contains(c.el));
