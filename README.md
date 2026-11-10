@@ -6,15 +6,22 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 [中文说明](README.zh.md)
 
-![One batch on a demo site: the cookie banner stops covering the main button, and the download button moves into the first screen](media/before-after.png)
+## Polished with award-site
 
-<sub>One batch on a demo site with planted problems. The first layout check failed 15 of 15 page-width combinations; after 18 small commits, 14 pass. The one left is a heading that stays three lines on phones because its text is a search field the redesign may not reword.</sub>
+![Island Evolution, Today's Mealow, Milo and DF Loadouts, all polished with this skill](media/showcase.png)
+
+- [Island Evolution](https://islandevolution.com/): a browser puzzle game's website.
+- [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
+- [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults): a hackathon build by a team of four, a voice-first tablet app for older adults plus a phone app for their families.
+- [DF Loadouts](https://dfgqm.com/en): a game loadout code site, polished over two redesign rounds.
+
+<sub>Scores are this skill's own 100-point review score, from two independent AI reviewers calibrated on a fixed anchor set, before the first batch and on the version that went live.</sub>
 
 Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
 
-It has been used on a content site, a pixel game's website, a food recommendation web app, a campus errand app prototype, a booth-screen prototype, and a hackathon tablet app for older adults with a phone companion for their families. Anything that runs in a browser fits, because the checks drive a headless browser.
+Besides the four above, it has polished a booth-screen kiosk prototype and a campus errand app prototype. Anything that runs in a browser fits, because the checks drive a headless browser.
 
-Awwwards is the bar, not a promise: so far it has taken real projects into the 80s on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
+Awwwards is the bar, not a promise: the projects above went from the high 60s and low 70s into the 80s on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
 
 How the loop works:
 
@@ -25,7 +32,7 @@ How the loop works:
 - **Brakes for every case**: deadlines, being stuck, no progress, flip-flopping.
 - **Hackathons and team work**: same bar, design moves before the start, polishing follows the team's checkpoints.
 
-![The loop in the terminal: layout check before and after one batch, then the blind comparison deciding the new best version](media/loop.gif)
+![The loop in the terminal: layout check before and after one batch on a demo site, then the blind comparison deciding the new best version](media/loop.gif)
 
 ## Try one tool in a minute
 
