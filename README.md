@@ -8,20 +8,21 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 ## Polished with award-site
 
-![Today's Mealow, Milo, SONIFIZZ and DF Loadouts, all polished with this skill](media/showcase.png)
+![Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, all polished with this skill](media/showcase.png)
 
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults): a hackathon build by a team of four, a voice-first tablet app for older adults plus a phone app for their families.
 - [SONIFIZZ Poster Kiosk](https://ekko237.github.io/sonifizz-poster/) ([code](https://github.com/Ekko237/sonifizz-poster)): a touch-kiosk prototype for a festival booth that prints your own poster in a minute.
+- [Shunluxia](https://ekko237.github.io/campus-errand/?lang=en) ([code](https://github.com/Ekko237/campus-errand)): a campus errand app prototype where classmates already walking past the parcel station bring your package back.
 - [DF Loadouts](https://dfgqm.com/en): a game loadout code site, polished over two redesign rounds.
 
 <sub>Scores are this skill's own 100-point review score, from two independent AI reviewers calibrated on a fixed anchor set, before the first batch and on the version that went live.</sub>
 
 Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
 
-Besides the four above, it has polished a campus errand app prototype ([live](https://ekko237.github.io/campus-errand/?lang=en), [code](https://github.com/Ekko237/campus-errand)). Anything that runs in a browser fits, because the checks drive a headless browser.
+Anything that runs in a browser fits, from marketing sites to tablet app interfaces, because the checks drive a headless browser.
 
-Awwwards is the bar, not a promise: the scored projects above went from 68.5 and 75.5 to 83.8 and 84.0 on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
+Awwwards is the bar, not a promise: the three scored projects above finished between 83.8 and 85.5 on its own 100-point ruler, around Honorable Mention level per item. None of them has won an Awwwards award.
 
 How the loop works:
 

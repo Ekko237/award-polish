@@ -13,7 +13,7 @@
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults)：黑客松上四人队做的作品，老人开口就能用的平板端，加上子女用的手机端。
 - [SONIFIZZ 声汽海报机](https://ekko237.github.io/sonifizz-poster/)（[源码](https://github.com/Ekko237/sonifizz-poster)）：音乐节展位上的竖屏触摸机原型，一分钟印出一张自己的海报。
-- [顺路侠](https://ekko237.github.io/campus-errand/)（[源码](https://github.com/Ekko237/campus-errand)）：校园跑腿互助 App 原型。
+- [顺路侠](https://ekko237.github.io/campus-errand/?lang=zh)（[源码](https://github.com/Ekko237/campus-errand)）：校园跑腿互助 App 原型。
 - [三角洲国际服改枪码](https://dfgqm.com/)：游戏改枪码站，做了两轮改版。
 
 <sub>分数是这个技能自己的 100 分评审分：两位独立的 AI 评审用固定的定标卷校正后取平均，前一个数是第一批改动之前，后一个数是上线的那一版。</sub>
