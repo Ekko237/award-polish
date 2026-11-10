@@ -8,7 +8,7 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 ## Polished with award-site
 
-![Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, all polished with this skill](media/showcase.jpg)
+![Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, all polished with this skill](media/showcase.png)
 
 - [Island Evolution](https://islandevolution.com/): a browser puzzle game's website; the scroll-driven walkthrough of one game is the part to see.
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.

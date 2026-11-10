@@ -8,7 +8,7 @@
 
 ## 用它打磨过的作品
 
-![用 award-site 打磨过的六个作品](media/showcase-zh.jpg)
+![用 award-site 打磨过的六个作品](media/showcase-zh.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
