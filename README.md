@@ -1,47 +1,78 @@
 # award-site
 
-一个给 Claude Code / Codex 用的技能：把网页产品做到「获奖网站级」的体验。
+**A Claude Code / Codex skill that polishes a web product to Awwwards level, with reviews you can trust.**
 
-功能做全只是及格线；同一份需求，大家做出来的功能差不多，拉开差距靠视觉、交互、动效和流畅度。这个技能把一套从真实项目里磨出来的打磨流程写成了规则：
+[中文说明](README.zh.md)
 
-- **两种模式**：从零做新网站，或者改版已有网站。
-- **先看标杆**：真的去 Awwwards / Webby / FWA 看一批同类获奖站，记下可借的手法。
-- **按批循环**：评审一次给出完整问题清单，开发一口气改完，再评。全程在本地做，弄好再发布。
-- **靠谱的评审**：统一的尺子、定标卷校正、两个评审取平均、和上一个最好版本并排比。尺子用 5 个真实的 Awwwards Site of the Day 和 1 个普通模板站校准过：10 分 = 顶尖 SOTD，9 分 = 一般 SOTD，8 分 = Honorable Mention；按 Awwwards 评委四项（设计 40%、可用性 30%、创意 20%、内容 10%）打的分和真实评委分误差在 0.1 以内。
-- **用户把关**：定期把前后对比给人看，防止 AI 评审集体看走眼。
-- **刹车写全**：截止时间、卡住、没进展、来回摆各有处理办法。
-- **黑客松和多人协作**：标准不降，设计挪到开赛前，打磨对齐团队检查点，演示道具里故意留的缺陷不修。
-- **现成工具**（`scripts/`）：
-  - `layout_check.py`：多宽度截图，查溢出、被裁（报越界几像素，分元素本身越界和只有阴影越界）、点击区域（算上伪元素扩出来的部分）、截断、报错、坏图、禁用字，还报按缩放算的实际显示字号；看不见的元素（祖先透明、读屏专用）不查。`--keep` 量首屏关键元素在不在第一屏，`--states` 按一份状态文件把操作后的弹窗、选中、展开再查一遍。
-  - `record_moment.py`：按虚拟时间逐格截图，用来看招牌时刻的动效过程。
-  - `sound_levels.py`：按步骤操作页面，记下每一步的最大音量电平，给听不到声音的评审当材料。
-  - `review_prompt.py`：生成两位评审的提示词，截图换成看不出版本的盲标。
-  - `calibrate.py`：定标卷校正、取平均、Awwwards 加权分，并按两位评审的逐项盲比定结论。
-  - `side_by_side.py`：前后对比拼图。
-  - `seo_keep.py`：对照改版前后的标题、描述、规范链接和结构化数据，发布前确认没有变少。
-  - `wait_live.py`：等线上页面和它引用的样式、脚本真的换成新版本。
-  - `asset_check.py`：不开浏览器查全站每个页面和样式表引用的本地文件在不在。
-  - `snapshot.py`：从提交导出给评审看的冻结快照，工作区有没提交的文件就拒绝，导出后查全站资源。
-  - `split_commits.py`：工作区攒了几件改动时，按一份拆法（关键词认领改动块）一件一个提交，先列出归属不清的改动块。
-  都在真实网站上跑过，用法写在 `references/scripts.md`。
-- **模板**（`templates/`）：任务说明和迭代日志，开工直接复制来填。
+![One batch on the bundled demo site: the cookie banner no longer covers the main button, the download button moves into the first screen](media/before-after.png)
 
-踩过的坑都记在 `references/lessons.md`。
+<sub>One batch on a demo site with planted problems. The first layout check failed 15 of 15 page-width combinations; after 16 small commits, 14 pass. The one left is a heading that stays three lines on phones because its text is a search field the redesign may not reword.</sub>
 
-## 安装
+Given the same brief, everyone ships about the same features. What makes one site stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler:
+
+- **Study the bar first**: open 6-8 recent Awwwards / Webby / FWA winners of the same kind, note the techniques worth borrowing.
+- **Work in batches**: reviewers hand over one complete issue list, the agent fixes all of it, one commit per fix, then the next review.
+- **Reviews you can trust**: two fresh reviewers who did not build it, a fixed anchor set to cancel out harsh or lenient reviewers, and a blind side-by-side against the best version so far that decides whether a batch counts. The 10-item ruler was calibrated on 5 real Sites of the Day and a template site: 10 = top SOTD, 9 = average SOTD, 8 = Honorable Mention.
+- **You stay the final judge**: before/after images go to you regularly, because AI reviewers can all miss the same thing; the version you pick becomes the baseline no score overrides.
+- **Brakes for every case**: deadlines, being stuck, no progress, flip-flopping.
+- **Hackathons and team work**: same bar, design moves before the start, polishing follows the team's checkpoints.
+
+![The loop in the terminal: layout check before and after one batch, then the blind comparison deciding the new best version](media/loop.gif)
+
+## Try one tool in a minute
+
+The layout checker works on any site, no skill install needed:
 
 ```bash
-bash install.sh          # 自动装到 ~/.claude/skills 和/或 ~/.codex/skills
-bash install.sh claude   # 只装 Claude Code
-bash install.sh codex    # 只装 Codex
+git clone https://github.com/Ekko237/award-site && cd award-site
+pip install playwright pillow && playwright install chromium
+python3 skills/award-site/scripts/layout_check.py https://your-site.com --out check --keep "main=.your-main-button"
 ```
 
-装好后，说「把这个网站打磨到获奖水平」「改版一下」，或者直接用 `/award-site`。
+You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: horizontal overflow, clipped outlines and shadows, truncated text, headings over two lines, console errors, broken images, tap targets under 44px, text rendered under 12px, and whether your main button is fully in the first screen and not covered by a banner.
 
-## 可选搭配
+## Install
 
-- 一个前端设计规则技能（比如 design-taste-frontend）：装了会按它的设计规则来。
-- 一个生图工具：画面优先用生成图片。
-- 跑 `scripts/` 里的工具需要 Python 3、Playwright（`pip install playwright && playwright install chromium`）和 Pillow；`asset_check.py` 还要 beautifulsoup4 和 tinycss2。
+**Claude Code (plugin)**:
 
-MIT License
+```
+/plugin install award-site --marketplace Ekko237/award-site
+```
+
+On older versions: `/plugin marketplace add Ekko237/award-site`, then `/plugin install award-site@award-site`.
+
+**Codex or Claude Code (plain skill)**:
+
+```bash
+bash install.sh          # installs to ~/.claude/skills and/or ~/.codex/skills
+bash install.sh claude   # Claude Code only
+bash install.sh codex    # Codex only
+```
+
+Then say "polish this website to award level", "redesign this site", or run `/award-site`.
+
+## What is inside
+
+- `skills/award-site/SKILL.md`: the loop (goal, process, check and iterate), finish conditions and red lines.
+- `references/`: new-site and redesign modes, how to study award sites, the scoring ruler, how to run reviewers, the polish checklist, shipping, hackathons, and lessons from real projects.
+- `scripts/` (usage in `references/scripts.md`), all run on real sites:
+  - `layout_check.py`: multi-width screenshots and layout checks, key elements in the first screen, states after interactions.
+  - `record_moment.py`: frame-by-frame recording of animations on a virtual clock, so reviewers can judge motion from stills.
+  - `sound_levels.py`: per-step audio levels, for reviewers who cannot hear in a headless browser.
+  - `review_prompt.py`: blind reviewer prompts with anonymized screenshot sets.
+  - `calibrate.py`: anchor calibration, averaging, Awwwards-weighted scores, and the verdict from the blind side-by-side.
+  - `side_by_side.py`: labelled before/after images from URLs or files.
+  - `seo_keep.py`: titles, descriptions, canonicals and structured data before vs after, so a redesign never loses search fields.
+  - `wait_live.py`: waits until the live page and its CSS and JS really serve the new version.
+  - `asset_check.py`: every local file every page references exists, without a browser.
+  - `snapshot.py`: review snapshots exported from commits only, so nothing uncommitted turns into a 404.
+  - `split_commits.py`: splits piled-up changes into one commit each by keyword.
+- `templates/`: the polish brief, iteration log, reviewer prompt and reviewer config.
+
+## Requirements
+
+Python 3, Playwright with Chromium, Pillow; `asset_check.py` also needs beautifulsoup4 and tinycss2, `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator, since generated pictures are preferred over drawn SVG.
+
+## License
+
+MIT

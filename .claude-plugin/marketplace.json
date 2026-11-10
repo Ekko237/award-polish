@@ -1,0 +1,26 @@
+{
+  "name": "award-site",
+  "owner": {
+    "name": "Ekko237",
+    "url": "https://github.com/Ekko237"
+  },
+  "metadata": {
+    "description": "award-site: a Claude Code and Codex skill that polishes web products to Awwwards level with a calibrated, blind review loop."
+  },
+  "plugins": [
+    {
+      "name": "award-site",
+      "source": "./",
+      "description": "Polish a web product to Awwwards level: study real award winners, then improve in batches scored by independent reviewers on one calibrated ruler, with blind side-by-side checks against the best version so far.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Ekko237",
+        "url": "https://github.com/Ekko237"
+      },
+      "homepage": "https://github.com/Ekko237/award-site",
+      "license": "MIT",
+      "keywords": ["web-design", "awwwards", "design-review", "redesign", "ui-polish", "claude-skills"],
+      "category": "development"
+    }
+  ]
+}

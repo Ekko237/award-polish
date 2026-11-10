@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# 把 award-site 装到本机的 Codex / Claude Code。
-# 用法：bash install.sh            （自动检测装到哪个）
-#       bash install.sh codex      （只装 Codex）
-#       bash install.sh claude     （只装 Claude Code）
+# Install award-site as a plain skill for Codex and/or Claude Code.
+# Usage: bash install.sh            (detect where to install)
+#        bash install.sh codex      (Codex only)
+#        bash install.sh claude     (Claude Code only)
+# Claude Code users can also install it as a plugin, see README.md.
 set -euo pipefail
 
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/skills/award-site"
 TARGETS=()
 
 case "${1:-auto}" in
@@ -15,32 +16,29 @@ case "${1:-auto}" in
     [ -d "$HOME/.codex" ]  && TARGETS+=("$HOME/.codex/skills/award-site")
     [ -d "$HOME/.claude" ] && TARGETS+=("$HOME/.claude/skills/award-site")
     ;;
-  *) echo "用法: bash install.sh [codex|claude]"; exit 1 ;;
+  *) echo "Usage: bash install.sh [codex|claude]"; exit 1 ;;
 esac
 
 if [ ${#TARGETS[@]} -eq 0 ]; then
-  echo "没找到 ~/.codex 或 ~/.claude，先装 Codex 或 Claude Code 再跑这个脚本。"
+  echo "Neither ~/.codex nor ~/.claude found. Install Codex or Claude Code first."
   exit 1
 fi
 
 for DST in "${TARGETS[@]}"; do
-  # 目标已存在且不是本仓库装出来的 → 先整目录备份，绝不覆盖别人的东西。
-  # （典型情况：你本来就有一个同名的私人版 skill。）
+  # An existing folder this repo did not install (e.g. your own private skill of the same name) is backed up whole, never overwritten.
   if [ -d "$DST" ] && [ ! -f "$DST/.award-site-installed" ]; then
     BAK="$DST.bak-$(date +%Y%m%d-%H%M%S)"
     cp -R "$DST" "$BAK"
-    echo "⚠️  $DST 已存在且不是本仓库装的，已整份备份到："
+    echo "⚠️  $DST already exists and was not installed by this repo; backed up to:"
     echo "    $BAK"
   fi
 
   mkdir -p "$DST"
-  # 不用 --delete：目标里多出来的文件（你自己的档案、笔记）一律保留
-  rsync -a \
-    --exclude '.git' --exclude 'install.sh' --exclude '.DS_Store' \
-    "$SRC"/ "$DST"/
+  # no --delete: extra files in the target (your own notes) are kept
+  rsync -a --exclude '.DS_Store' --exclude '__pycache__' "$SRC"/ "$DST"/
   touch "$DST/.award-site-installed"
-  echo "✅ 已安装到 $DST"
+  echo "✅ Installed to $DST"
 done
 
 echo
-echo "打开 Codex 或 Claude Code，说一句「把这个网站打磨到获奖水平」，或者用 /award-site 就会触发。"
+echo "Open Codex or Claude Code and say \"polish this website to award level\", or use /award-site."
