@@ -4,9 +4,9 @@
 
 [中文说明](README.zh.md)
 
-![One batch on the bundled demo site: the cookie banner no longer covers the main button, the download button moves into the first screen](media/before-after.png)
+![One batch on a demo site: the cookie banner stops covering the main button, and the download button moves into the first screen](media/before-after.png)
 
-<sub>One batch on a demo site with planted problems. The first layout check failed 15 of 15 page-width combinations; after 16 small commits, 14 pass. The one left is a heading that stays three lines on phones because its text is a search field the redesign may not reword.</sub>
+<sub>One batch on a demo site with planted problems. The first layout check failed 15 of 15 page-width combinations; after 18 small commits, 14 pass. The one left is a heading that stays three lines on phones because its text is a search field the redesign may not reword.</sub>
 
 Given the same brief, everyone ships about the same features. What makes one site stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler:
 
