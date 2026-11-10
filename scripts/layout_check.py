@@ -5,11 +5,11 @@ import re
 from playwright.sync_api import sync_playwright
 
 JS = r"""
-() => {
+({minFont}) => {
   const vw = document.documentElement.clientWidth;
   const out = {overflowX: document.documentElement.scrollWidth > vw + 1,
                scrollWidth: document.documentElement.scrollWidth, viewport: vw,
-               offscreen: [], clipped: [], smallTargets: [], truncated: [], brokenImages: []};
+               offscreen: [], clipped: [], smallTargets: [], smallText: [], truncated: [], brokenImages: []};
   const label = el => {
     const t = (el.innerText || el.getAttribute('aria-label') || el.alt || '').trim().slice(0, 40);
     return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
@@ -59,11 +59,17 @@ JS = r"""
     }
     const clickable = el.matches('a[href],button,input:not([type=hidden]),select,textarea,[role=button],[onclick],[tabindex]:not([tabindex="-1"])');
     if (vw < 768 && clickable && (r.width < 44 || r.height < 44)) out.smallTargets.push({el: label(el), w: Math.round(r.width), h: Math.round(r.height)});
+    // 实际显示的字号：CSS 字号乘上祖先 transform 的缩放（整块缩放的画面、演示外壳里的大屏，CSS 写得大、屏上很小）
+    if (minFont > 0 && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && el.offsetHeight > 0) {
+      const px = parseFloat(s.fontSize) * r.height / el.offsetHeight;
+      if (px < minFont) out.smallText.push({el: label(el), px: Math.round(px * 10) / 10});
+    }
     if ((s.overflow !== 'visible' || s.textOverflow === 'ellipsis') && el.scrollWidth > el.clientWidth + 1 && el.children.length === 0 && el.innerText)
       out.truncated.push({el: label(el)});
   }
   for (const img of document.images) if (img.complete && img.naturalWidth === 0 && visible(img)) out.brokenImages.push(img.currentSrc || img.src);
-  for (const k of ['offscreen','clipped','smallTargets','truncated']) out[k] = out[k].slice(0, 40);
+  out.smallText.sort((a, b) => a.px - b.px);
+  for (const k of ['offscreen','clipped','smallTargets','smallText','truncated']) out[k] = out[k].slice(0, 40);
   return out;
 }
 """
@@ -128,8 +134,8 @@ def execute_step(page, step):
         raise ValueError(f'未知步骤：{step}')
 
 
-def check_page(page, keep=None, max_h1_lines=2):
-    result = page.evaluate(JS)
+def check_page(page, keep=None, max_h1_lines=2, min_font=12):
+    result = page.evaluate(JS, {'minFont': min_font})
     result.update(page.evaluate(KEEP_HEADINGS, {'keep': keep or [], 'maxLines': max_h1_lines}))
     return result
 
@@ -147,6 +153,7 @@ def main():
     ap.add_argument('--keep', action='append', default=[], metavar='名字=选择器')
     ap.add_argument('--max-h1-lines', type=int, default=2)
     ap.add_argument('--states', help='状态数组 JSON，每项含名字、网址、步骤')
+    ap.add_argument('--min-font', type=float, default=12, help='实际显示字号低于这个像素数就报 smallText（只报告不判不过），0 关掉')
     a = ap.parse_args()
     widths = [int(x) for x in a.widths.split(',')]
     if not widths or min(widths) <= 0 or min(a.height, a.phone_height) <= 0 or min(a.settle, a.slices, a.max_h1_lines) < 0:
@@ -182,7 +189,7 @@ def main():
                 page.wait_for_timeout(a.settle)
                 for step in steps:
                     execute_step(page, step)
-                r = check_page(page, keep, a.max_h1_lines)
+                r = check_page(page, keep, a.max_h1_lines, a.min_font)
                 r['forbidden'] = [x for x in a.forbid.split(',') if x and x in page.inner_text('body')]
                 slug = re.sub(r'[^a-zA-Z0-9]+', '-', url.split('://')[-1]).strip('-')[:60] or 'page'
                 state_slug = re.sub(r'[^\w-]+', '-', state or '', flags=re.UNICODE)
@@ -205,9 +212,10 @@ def main():
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     for r in report:
-        flags = [k for k in ('overflowX','offscreen','clipped','smallTargets','truncated','brokenImages','forbidden','consoleErrors','failedRequests','h1TooManyLines') if r.get(k)]
+        flags = [k for k in ('overflowX','offscreen','clipped','smallTargets','smallText','truncated','brokenImages','forbidden','consoleErrors','failedRequests','h1TooManyLines') if r.get(k)]
         flags += [k for k in ('keepMissing','notInFirstScreen','keepCovered') if any(x[k] for x in r['keep'])]
-        print(f"{'PASS' if r['pass'] else 'FAIL'} {r['width']:>5} {r['url']} 状态：{r['state']} {' '.join(flags)}")
+        small = f" 最小字 {r['smallText'][0]['px']}px" if r.get('smallText') else ''
+        print(f"{'PASS' if r['pass'] else 'FAIL'} {r['width']:>5} {r['url']} 状态：{r['state']} {' '.join(flags)}{small}")
     if keep:
         print('\n关键元素首屏位置')
         print('宽度 | 网址 / 状态 | 元素 | y 范围 | 屏高 | 结果')
