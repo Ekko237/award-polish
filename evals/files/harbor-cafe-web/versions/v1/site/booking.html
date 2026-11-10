@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预订座位｜港湾咖啡</title>
+  <meta name="description" content="在线预订港湾咖啡的座位，选日期、时间和人数。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">港湾咖啡 <span>HARBOR COFFEE</span></a>
+    <nav class="site-nav">
+      <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="booking.html" aria-current="page">预订座位</a>
+        <a href="#contact">联系我们</a>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section class="page-head">
+      <h1>预订座位</h1>
+      <p class="lead">留一张靠窗的桌子。提交后店里会打电话和您确认。</p>
+    </section>
+    <div class="booking">
+      <form class="booking-form">
+        <label class="field"><span>日期</span><input type="date" name="date" required></label>
+        <label class="field"><span>人数</span><select name="people"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+        <label class="field"><span>称呼</span><input type="text" name="name" placeholder="怎么称呼您"></label>
+        <button class="btn btn-primary" type="submit">确认预订</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </form>
+      <aside class="booking-aside">
+        <img src="assets/table.png" alt="靠窗的小圆桌，窗外是江面" width="900" height="1100">
+        <h2>到店须知</h2>
+        <ul>
+          <li>座位为您保留 15 分钟。</li>
+          <li>六位以上请直接打电话：021 6555 0188。</li>
+          <li>周末下午人多，建议提前一天预订。</li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <footer class="site-footer" id="contact">
+    <p>港湾咖啡 · 沿着江风找到我们</p>
+    <p>上海市杨浦区沿江路 18 号 · 电话 021 6555 0188</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

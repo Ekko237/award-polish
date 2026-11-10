@@ -19,7 +19,7 @@ case "${1:-auto}" in
 esac
 
 if [ ${#TARGETS[@]} -eq 0 ]; then
-  echo "没找到 ~/.codex 或 ~/.claude —— 先装 Codex 或 Claude Code 再跑这个脚本。"
+  echo "没找到 ~/.codex 或 ~/.claude，先装 Codex 或 Claude Code 再跑这个脚本。"
   exit 1
 fi
 
