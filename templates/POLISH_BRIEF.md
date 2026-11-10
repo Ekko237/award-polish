@@ -26,14 +26,7 @@
 - 首屏关键元素：<名字=选择器，每个页面一两个；开工时量的 y 值>
 - 这台机器的限制：<内存；8GB 及以下一次只跑一个浏览器任务>
 - 评审模型：<每批写进记录>
-- 命令（S = <技能目录>/scripts。<技能目录> 是本技能的安装位置，Claude Code 一般是 ~/.claude/skills/award-site，Codex 一般是 ~/.codex/skills/award-site）：
-  - 布局体检：python3 $S/layout_check.py <url...> --widths <宽度> --out <目录> [--keep 名字=选择器] [--states <states.json>] [--slices 8] [--forbid "<禁用字，逗号分隔>"]
-  - 招牌时刻：python3 $S/record_moment.py <url> --steps <steps.json> --out <目录> --every 40 [--phone]
-  - 评审提示词：python3 $S/review_prompt.py --config <review.json> --anchor-shots <定标卷截图> --current <这一版截图> --round <.work/rN> [--best <最好版本截图>]
-  - 算分：python3 $S/calibrate.py --round <.work/rN> --anchor <anchor.json> --model "<模型 档位>" [--best <best.json>] [--save <best.json>]
-  - 前后对比：python3 $S/side_by_side.py --urls "改版前=<线上>" "新版=<本地>" --pages <页面…> --widths 1440,375 --out <目录>
-  - 搜索字段：python3 $S/seo_keep.py --base <线上> --new <本地> --pages <页面…> --files /robots.txt /sitemap.xml
-  - 等上线：python3 $S/wait_live.py <网址> --has <这一版才有的字>
+- 命令和参数：<技能目录>/references/scripts.md
 - 定标卷：<截图目录>，标准分：<anchor.json 路径>；评审配置：<review.json 路径>
 - 每项各分数长什么样：<日志里那一节的位置，和 review.json 一致>
 - 招牌时刻：<逐个列出，每个标 未做 / 待打磨 / 完成>

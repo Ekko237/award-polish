@@ -43,6 +43,8 @@ def main():
     for key in STRINGS:
         if not isinstance(config[key], str):
             sys.exit(f'{args.config} 的「{key}」必须是字符串')
+    if not isinstance(config.get('声音', []), list) or any(not isinstance(x, str) for x in config.get('声音', [])):
+        sys.exit(f'{args.config} 的「声音」必须是字符串列表')
     rubric = config['每项各分数长什么样']
     if not isinstance(rubric, dict) or set(rubric) != set(DIMS):
         sys.exit(f'{args.config} 的「每项各分数长什么样」必须正好包含十项维度：' + '、'.join(DIMS))

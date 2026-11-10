@@ -41,6 +41,11 @@ def html_fields(content):
     return fields
 
 
+def under(base, path):
+    # 页面路径接在 base 后面：base 带子路径（http://localhost:8790/a/）时 urljoin 会把它丢掉
+    return base.rstrip('/') + '/' + path.lstrip('/')
+
+
 def page_fields(response):
     return {'status': response.status_code, **html_fields(response.content)}
 
@@ -81,10 +86,10 @@ def main():
     differences = 0
     baseline = {}
     with requests.Session() as session:
-        pages = list(dict.fromkeys(a.pages + (sitemap_paths(session, urljoin(a.base, '/sitemap.xml'), a.sitemap) if a.sitemap else [])))
+        pages = list(dict.fromkeys(a.pages + (sitemap_paths(session, under(a.base, 'sitemap.xml'), a.sitemap) if a.sitemap else [])))
         for path in pages:
-            before = page_fields(session.get(urljoin(a.base.rstrip('/') + '/', path), timeout=30))
-            after = page_fields(session.get(urljoin(a.new.rstrip('/') + '/', path), timeout=30))
+            before = page_fields(session.get(under(a.base, path), timeout=30))
+            after = page_fields(session.get(under(a.new, path), timeout=30))
             baseline[path] = before
             changed = [key for key in before if before[key] != after[key]]
             differences += len(changed)
@@ -92,8 +97,8 @@ def main():
             for key in changed:
                 print(f'  {key}: base={json.dumps(before[key], ensure_ascii=False)} new={json.dumps(after[key], ensure_ascii=False)}')
         for path in a.files:
-            before = session.get(urljoin(a.base, path), timeout=30)
-            after = session.get(urljoin(a.new, path), timeout=30)
+            before = session.get(under(a.base, path), timeout=30)
+            after = session.get(under(a.new, path), timeout=30)
             before.raise_for_status()
             after.raise_for_status()
             changed = before.content != after.content

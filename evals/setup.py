@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 FILES = ROOT / "files"
-EMAIL = "{{EMAIL_c0959587}}"
+EMAIL = "eval@example.com"
 WORKDIR = "@WORKDIR@"
 
 

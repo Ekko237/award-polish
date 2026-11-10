@@ -56,7 +56,7 @@ for html in sorted(ROOT.rglob("*.html")):
     if skipped(html):
         continue
     rel = html.relative_to(ROOT)
-    soup = BeautifulSoup(html.read_text(), "html.parser")
+    soup = BeautifulSoup(html.read_text(encoding="utf-8"), "html.parser")
     for tag, attr in (("img", "src"), ("source", "src"), ("script", "src"), ("link", "href"), ("video", "poster")):
         for el in soup.find_all(tag):
             if not el.get(attr):
@@ -79,7 +79,7 @@ for html in sorted(ROOT.rglob("*.html")):
 for css in sorted(ROOT.rglob("*.css")):
     if skipped(css):
         continue
-    for rule in tinycss2.parse_stylesheet(css.read_text(), skip_comments=True, skip_whitespace=True):
+    for rule in tinycss2.parse_stylesheet(css.read_text(encoding="utf-8"), skip_comments=True, skip_whitespace=True):
         for u in css_urls(list(getattr(rule, "prelude", None) or []) + list(getattr(rule, "content", None) or [])):
             check(u, css.parent, str(css.relative_to(ROOT)))
 

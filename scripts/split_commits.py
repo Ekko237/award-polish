@@ -36,6 +36,11 @@ def git(*a, inp=None):
     return subprocess.run(["git", *a], cwd=ROOT, check=True, text=True, capture_output=True, input=inp).stdout
 
 
+def names(*a):
+    # -z 按 \0 分隔，文件名带空格也不会被拆开
+    return [n for n in git(*a, "-z").split("\0") if n]
+
+
 def expand(pat):
     return sorted(str(p.relative_to(ROOT)) for p in ROOT.glob(pat)) if "*" in pat else [pat]
 
@@ -69,7 +74,7 @@ def file_owner(path):
 def plan():
     km = keymap()
     bad = []
-    for path in git("diff", "--name-only").split():
+    for path in names("diff", "--name-only"):
         if path in km:
             for h in split_hunks(path)[1]:
                 o = owners(path, h, km) or file_owner(path)
@@ -77,7 +82,7 @@ def plan():
                     bad.append(f"{path} {h.splitlines()[0]} → {o or '没有归属'}")
         elif len(file_owner(path)) != 1:
             bad.append(f"{path}（整个文件）→ {file_owner(path) or '没有归属'}")
-    for path in git("ls-files", "--others", "--exclude-standard").split():
+    for path in names("ls-files", "--others", "--exclude-standard"):
         if len(file_owner(path)) != 1:
             bad.append(f"{path}（新文件）→ {file_owner(path) or '没有归属'}")
     for b in bad:
@@ -117,12 +122,12 @@ def run_item(it):
 if not plan():
     sys.exit(1)
 if args.action == "run":
-    names = args.items.split(",") if args.items else [it["name"] for it in ITEMS]
-    unknown = set(names) - {it["name"] for it in ITEMS}
+    chosen = args.items.split(",") if args.items else [it["name"] for it in ITEMS]
+    unknown = set(chosen) - {it["name"] for it in ITEMS}
     if unknown:
         sys.exit(f"拆法里没有这几件：{sorted(unknown)}")
     for it in ITEMS:
-        if it["name"] in names:
+        if it["name"] in chosen:
             run_item(it)
     left = git("status", "--porcelain").strip()
     print("工作区干净" if not left else "还剩没拆走的改动：\n" + left)

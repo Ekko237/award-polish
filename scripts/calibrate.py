@@ -135,7 +135,7 @@ def main():
                     vote = 0 if choice == '平' else (1 if mapping[choice] == '当前' else -1)
                     votes.append(vote)
                 if all(v == -1 for v in votes):
-                    result = '差（两位都判）'
+                    result = '差（两位都判定）'
                 elif 1 in votes and -1 in votes and sum(votes) == 0:
                     result = '分歧'
                 elif sum(votes) >= 1:
@@ -158,12 +158,12 @@ def main():
             results[d] = result
             print(f'  {d}：{vote_text}，{result}')
         good = [d for d in DIMS if results[d] == '好']
-        bad = [d for d in DIMS if results[d] in ('差', '差（两位都判）')]
-        unanimous = [d for d in DIMS if results[d] == '差（两位都判）']
+        bad = [d for d in DIMS if results[d] in ('差', '差（两位都判定）')]
+        unanimous = [d for d in DIMS if results[d] == '差（两位都判定）']
         disagreements = [d for d in DIMS if results[d] == '分歧']
         if unanimous:
             conclusion = '退回'
-            print('退回：' + '、'.join(unanimous) + ' 两位评审都判最好版本更好。把这批里动到这几项的改动，用编辑改回最好版本的样子，作为新提交加在最后，其余保留；最好版本不变。')
+            print('退回：' + '、'.join(unanimous) + ' 两位评审都判定最好版本更好。把这批里动到这几项的改动，用编辑改回最好版本的样子，作为新提交加在最后，其余保留；最好版本不变。')
         elif len(good) > len(bad):
             conclusion = '新的最好版本'
             print('新的最好版本。')
@@ -175,7 +175,7 @@ def main():
             print('差和分歧的项：' + ('、'.join(d for d in DIMS if d in bad or d in disagreements) or '无'))
         else:
             conclusion = '比最好版本差'
-            print('比最好版本差：把判差的几项（' + '、'.join(bad) + '）改回最好版本的样子，最好版本不变。')
+            print('比最好版本差：把判定变差的几项（' + '、'.join(bad) + '）改回最好版本的样子，最好版本不变。')
         delta = round(total - best['总分'], 10)
         print(f'绝对分：最好版本 {best["总分"]:.1f}（{best["模型"]}）→ 这一轮 {total:.1f}（{args.model}）')
         if args.model != best['模型']:
@@ -188,10 +188,12 @@ def main():
         saved = {'分': avg, '总分': total, '模型': args.model, '轮次': round_path.name, 'awwwards': aw}
         Path(args.save).write_text(json.dumps(saved, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         print(f'已存到：{args.save}')
+    elif args.save:
+        print(f'结论不是新的最好版本，没有改动 {args.save}')
     log = f'日志用：独立评审（{args.model}，{count} 位）校正后 ' + ' · '.join(f'{d}{avg[d]:.1f}' for d in DIMS) + f'（合计 {total:.1f}）；Awwwards 加权 ' + (f'{weighted:.2f}' if weighted is not None else '无')
     if best:
         good_count = sum(v == '好' for v in results.values())
-        bad_count = sum(v in ('差', '差（两位都判）') for v in results.values())
+        bad_count = sum(v in ('差', '差（两位都判定）') for v in results.values())
         log += f'；并排比 好 {good_count} · 平 {len(DIMS) - good_count - bad_count} · 差 {bad_count} → {conclusion}'
     print(log)
 

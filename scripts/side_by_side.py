@@ -3,7 +3,6 @@ import platform
 import re
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urljoin
 
 from PIL import Image, ImageDraw, ImageFont
 from playwright.sync_api import sync_playwright
@@ -95,7 +94,7 @@ def main():
                         page = context.new_page()
                         if a.clock:
                             page.clock.set_fixed_time(a.clock)
-                        page.goto(urljoin(base.rstrip('/') + '/', path), wait_until='load')
+                        page.goto(base.rstrip('/') + '/' + path.lstrip('/'), wait_until='load')
                         page.wait_for_timeout(a.settle)
                         if a.dismiss:
                             page.locator(a.dismiss).filter(visible=True).first.click()

@@ -139,15 +139,18 @@ KEEP_HEADINGS = r"""
     if (!el) return {name, selector, top: null, bottom: null, height: vh, keepMissing: true, notInFirstScreen: false, keepCovered: []};
     const r = el.getBoundingClientRect();
     const points = [[r.x+r.width/2,r.y+r.height/2],[r.left+1,r.top+1],[r.right-1,r.top+1],[r.left+1,r.bottom-1],[r.right-1,r.bottom-1]];
-    const covered = [];
+    const covers = [];
     for (const [x,y] of points) {
       if (x < 0 || x >= vw || y < 0 || y >= vh) continue;
       const hit = document.elementFromPoint(x,y);
-      // 点到元素自己的祖先说明这个角是圆角外的空白，不算被盖住
-      if (hit && hit !== el && !el.contains(hit) && !hit.contains(el) && !covered.some(c => c.by === label(hit))) covered.push({by: label(hit), x, y});
+      // 点到元素自己的祖先说明这个角是圆角外的空白，不算被盖住；同一个浮层里的子元素只记浮层一次
+      if (!hit || hit === el || el.contains(hit) || hit.contains(el)) continue;
+      const i = covers.findIndex(c => c.el.contains(hit) || hit.contains(c.el));
+      if (i < 0) covers.push({el: hit, x, y});
+      else if (hit.contains(covers[i].el)) covers[i].el = hit;
     }
     return {name, selector, top: r.top, bottom: r.bottom, height: vh,
-      keepMissing: false, notInFirstScreen: r.bottom > vh || r.top < 0, keepCovered: covered};
+      keepMissing: false, notInFirstScreen: r.bottom > vh || r.top < 0, keepCovered: covers.map(c => ({by: label(c.el), x: c.x, y: c.y}))};
   });
   return {headings, keep: results, h1TooManyLines: maxLines > 0 ? headings.filter(h => h.tag === 'h1' && h.lines > maxLines) : []};
 }
@@ -171,8 +174,12 @@ def execute_step(page, step):
         page.keyboard.press(step['press'])
     elif 'scroll' in step:
         page.mouse.wheel(0, step['scroll'])
+    elif 'js' in step:
+        page.evaluate(step['js'])
     elif 'wait' in step:
         page.wait_for_timeout(step['wait'])
+    elif 'wait_for' in step:
+        page.wait_for_selector(step['wait_for'], timeout=step.get('timeout', 20000))
     else:
         raise ValueError(f'未知步骤：{step}')
 
@@ -196,7 +203,7 @@ def main():
     ap.add_argument('--keep', action='append', default=[], metavar='名字=选择器')
     ap.add_argument('--max-h1-lines', type=int, default=2)
     ap.add_argument('--states', help='状态数组 JSON，每项含名字、网址、步骤')
-    ap.add_argument('--min-font', type=float, default=12, help='实际显示字号低于这个像素数就报 smallText（只报告不判不过），0 关掉')
+    ap.add_argument('--min-font', type=float, default=12, help='实际显示字号低于这个像素数就报 smallText（只报告，不算不过），0 关掉')
     ap.add_argument('--clock', type=datetime.fromisoformat, help='把页面时钟固定在这个本地时刻（如 2026-11-09T12:30）：问候语、营业状态、日期跟着钟点变的页面，每次截图和量出的坐标一致')
     a = ap.parse_args()
     widths = [int(x) for x in a.widths.split(',')]
