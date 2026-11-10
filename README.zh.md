@@ -8,13 +8,12 @@
 
 ## 用它打磨过的作品
 
-![用 award-site 打磨过的六个作品](media/showcase-zh.png)
+![用 award-site 打磨过的五个作品](media/showcase-zh.png)
 
-- [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults)：黑客松上四人队做的作品，老人开口就能用的平板端，加上子女用的手机端。
-- [SONIFIZZ 声汽海报机](https://ekko237.github.io/sonifizz-poster/)：音乐节展位上的竖屏触摸机原型。
-- [顺路侠](https://ekko237.github.io/campus-errand/)：校园跑腿互助 App 原型。
+- [SONIFIZZ 声汽海报机](https://ekko237.github.io/sonifizz-poster/)（[源码](https://github.com/Ekko237/sonifizz-poster)）：音乐节展位上的竖屏触摸机原型，一分钟印出一张自己的海报。
+- [顺路侠](https://ekko237.github.io/campus-errand/)（[源码](https://github.com/Ekko237/campus-errand)）：校园跑腿互助 App 原型。
 - [三角洲国际服改枪码](https://dfgqm.com/)：游戏改枪码站，做了两轮改版。
 
 <sub>分数是这个技能自己的 100 分评审分：两位独立的 AI 评审用固定的定标卷校正后取平均，前一个数是第一批改动之前，后一个数是上线的那一版。</sub>
@@ -23,7 +22,7 @@
 
 能在浏览器里打开的界面都适用，网站、网页应用、触屏原型、平板和手机上的 App 界面都行，因为检查脚本靠无头浏览器来跑。
 
-Awwwards 只是我们对照的标杆：上面这些作品在它自己的 100 分尺子上，从六七十分提到了 80 多分，大约是每项 Honorable Mention 的水平，还没有一个拿过 Awwwards 奖。
+Awwwards 只是我们对照的标杆：上面打了分的三个作品，在它自己的 100 分尺子上最后都在 83.8 到 85.5 分之间，大约是每项 Honorable Mention 的水平，还没有一个拿过 Awwwards 奖。
 
 循环怎么走：
 
