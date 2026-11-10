@@ -9,15 +9,44 @@ JS = r"""
   const vw = document.documentElement.clientWidth;
   const out = {overflowX: document.documentElement.scrollWidth > vw + 1,
                scrollWidth: document.documentElement.scrollWidth, viewport: vw,
-               offscreen: [], clipped: [], smallTargets: [], smallText: [], truncated: [], brokenImages: []};
+               offscreen: [], clipped: [], smallTargets: [], smallVisible: [], smallText: [], truncated: [], brokenImages: []};
   const label = el => {
     const t = (el.innerText || el.getAttribute('aria-label') || el.alt || '').trim().slice(0, 40);
     return el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
       (el.className && typeof el.className === 'string' ? '.' + el.className.trim().split(/\s+/).slice(0,2).join('.') : '') +
       (t ? ' "' + t + '"' : '');
   };
-  const visible = el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el);
-    return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && +s.opacity > 0; };
+  // 祖先透明度为 0 的（淡出到画框外的标签）和读屏专用的 1px 元素（.sr-only）都看不见，不查
+  const visible = el => { const r = el.getBoundingClientRect();
+    return r.width > 1 && r.height > 1 && el.checkVisibility({checkOpacity: true, checkVisibilityCSS: true}); };
+  // 阴影每层按「模糊 + 扩张 ± 偏移」算四边各伸出多少，inset 和全透明的阴影不算
+  const shadowPad = sh => {
+    const pad = {l: 0, t: 0, r: 0, b: 0};
+    if (!sh || sh === 'none') return pad;
+    for (const layer of sh.split(/,(?![^(]*\))/)) {
+      if (/inset/.test(layer)) continue;
+      const color = layer.match(/rgba?\([^)]*\)/);
+      if (color && /rgba\([^)]*,\s*0\)$/.test(color[0])) continue;
+      const [x = 0, y = 0, blur = 0, spread = 0] = (layer.replace(/rgba?\([^)]*\)/, '').match(/-?\d+(\.\d+)?px/g) || []).map(parseFloat);
+      pad.l = Math.max(pad.l, blur + spread - x); pad.r = Math.max(pad.r, blur + spread + x);
+      pad.t = Math.max(pad.t, blur + spread - y); pad.b = Math.max(pad.b, blur + spread + y);
+    }
+    return pad;
+  };
+  // 点击区：元素本身加上绝对定位的 ::before / ::after（用伪元素扩大点击区是常见做法）
+  const hitBox = (el, r) => {
+    let w = r.width, h = r.height;
+    if (getComputedStyle(el).position === 'static') return {w, h};
+    for (const p of ['::before', '::after']) {
+      const ps = getComputedStyle(el, p);
+      if (ps.content === 'none' || ps.content === 'normal' || ps.position !== 'absolute' || ps.pointerEvents === 'none') continue;
+      const v = k => ps[k] === 'auto' ? null : parseFloat(ps[k]);
+      const pw = v('left') !== null && v('right') !== null ? r.width - v('left') - v('right') : parseFloat(ps.width) || 0;
+      const ph = v('top') !== null && v('bottom') !== null ? r.height - v('top') - v('bottom') : parseFloat(ps.height) || 0;
+      w = Math.max(w, pw); h = Math.max(h, ph);
+    }
+    return {w, h};
+  };
   const all = [...document.querySelectorAll('body *')].filter(visible);
   for (const el of all) {
     const r = el.getBoundingClientRect();
@@ -35,22 +64,26 @@ JS = r"""
     }
     const s = getComputedStyle(el);
     // 描边、阴影外框
-    let pad = 0;
-    const sh = s.boxShadow; if (sh && sh !== 'none') {
-      const nums = sh.match(/-?\d+(\.\d+)?px/g) || []; pad = Math.max(pad, nums.reduce((a, n) => a + Math.abs(parseFloat(n)), 0) / 2);
+    const pad = shadowPad(s.boxShadow);
+    if (s.outlineStyle !== 'none') {
+      const o = parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset || 0);
+      for (const k of ['l', 't', 'r', 'b']) pad[k] = Math.max(pad[k], o);
     }
-    if (s.outlineStyle !== 'none') pad = Math.max(pad, parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset || 0));
-    if (pad > 0 || parseFloat(s.borderTopWidth) > 0) {
+    const anyPad = Math.max(pad.l, pad.t, pad.r, pad.b) > 0;
+    if (anyPad || parseFloat(s.borderTopWidth) > 0) {
       let p = el.parentElement;
       while (p && p !== document.body) {
         const ps = getComputedStyle(p);
         if (ps.overflow !== 'visible' || ps.overflowX !== 'visible' || ps.overflowY !== 'visible') {
           const pr = p.getBoundingClientRect();
-          const o = {l: r.left - pad, t: r.top - pad, r: r.right + pad, b: r.bottom + pad};
-          if (o.l < pr.left - 0.5 || o.t < pr.top - 0.5 || o.r > pr.right + 0.5 || o.b > pr.bottom + 0.5) {
+          // over：外框越过裁剪框最多的那一边超出几像素，方便判断看不看得出来
+          const over = Math.max(pr.left - (r.left - pad.l), (r.right + pad.r) - pr.right, pr.top - (r.top - pad.t), (r.bottom + pad.b) - pr.bottom);
+          if (over > 0.5) {
             // 滚动容器里的内容本来就会超出，只记离边很近、看起来像被切了一刀的
             const inScroller = /auto|scroll/.test(ps.overflow + ps.overflowX + ps.overflowY);
-            if (!inScroller || pad > 0) out.clipped.push({el: label(el), by: label(p)});
+            // kind：元素本身越界是 box（有意放大裁切的图片也是这一类），只有描边阴影越界是 shadow
+            const boxOut = r.left < pr.left - 0.5 || r.right > pr.right + 0.5 || r.top < pr.top - 0.5 || r.bottom > pr.bottom + 0.5;
+            if (!inScroller || anyPad) out.clipped.push({el: label(el), by: label(p), over: Math.round(over), kind: boxOut ? 'box' : 'shadow'});
           }
           break;
         }
@@ -58,7 +91,12 @@ JS = r"""
       }
     }
     const clickable = el.matches('a[href],button,input:not([type=hidden]),select,textarea,[role=button],[onclick],[tabindex]:not([tabindex="-1"])');
-    if (vw < 768 && clickable && (r.width < 44 || r.height < 44)) out.smallTargets.push({el: label(el), w: Math.round(r.width), h: Math.round(r.height)});
+    // 点击区（含伪元素）小于 44 进 smallTargets；看得见的大小小于 44、点击区够大的进 smallVisible（整块缩放的画面要看这一栏）
+    if (vw < 768 && clickable && (r.width < 44 || r.height < 44)) {
+      const hit = hitBox(el, r);
+      const item = {el: label(el), w: Math.round(r.width), h: Math.round(r.height), hitW: Math.round(hit.w), hitH: Math.round(hit.h)};
+      (hit.w < 44 || hit.h < 44 ? out.smallTargets : out.smallVisible).push(item);
+    }
     // 实际显示的字号：CSS 字号乘上祖先 transform 的缩放（整块缩放的画面、演示外壳里的大屏，CSS 写得大、屏上很小）
     if (minFont > 0 && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && el.offsetHeight > 0) {
       const px = parseFloat(s.fontSize) * r.height / el.offsetHeight;
@@ -69,7 +107,7 @@ JS = r"""
   }
   for (const img of document.images) if (img.complete && img.naturalWidth === 0 && visible(img)) out.brokenImages.push(img.currentSrc || img.src);
   out.smallText.sort((a, b) => a.px - b.px);
-  for (const k of ['offscreen','clipped','smallTargets','smallText','truncated']) out[k] = out[k].slice(0, 40);
+  for (const k of ['offscreen','clipped','smallTargets','smallVisible','smallText','truncated']) out[k] = out[k].slice(0, 40);
   return out;
 }
 """
@@ -85,11 +123,15 @@ KEEP_HEADINGS = r"""
   };
   const label = el => el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
     (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).slice(0,2).join('.') : '');
+  // 行数：文字片段按纵向位置分组，相差不到半个行高算同一行（逐字拆成 inline-block、字和字高低错开的标题也数得对）
   const headings = [...document.querySelectorAll('h1,h2')].filter(visible).map(el => {
+    const s = getComputedStyle(el);
+    const lh = s.lineHeight === 'normal' ? parseFloat(s.fontSize) * 1.2 : parseFloat(s.lineHeight);
     const range = document.createRange(); range.selectNodeContents(el);
-    const tops = [];
-    for (const r of range.getClientRects()) if (r.width && r.height && !tops.some(t => Math.abs(t-r.top) < 2)) tops.push(r.top);
-    return {tag: el.tagName.toLowerCase(), text: el.innerText.trim().slice(0,40), lines: tops.length};
+    const mids = [...range.getClientRects()].filter(r => r.width && r.height).map(r => r.top + r.height / 2).sort((a, b) => a - b);
+    let lines = 0, last = -Infinity;
+    for (const m of mids) if (m - last > lh / 2) { lines++; last = m; }
+    return {tag: el.tagName.toLowerCase(), text: el.innerText.trim().slice(0,40), lines};
   });
   const results = keep.map(({name, selector}) => {
     const el = [...document.querySelectorAll(selector)].find(visible);
@@ -212,7 +254,7 @@ def main():
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     for r in report:
-        flags = [k for k in ('overflowX','offscreen','clipped','smallTargets','smallText','truncated','brokenImages','forbidden','consoleErrors','failedRequests','h1TooManyLines') if r.get(k)]
+        flags = [k for k in ('overflowX','offscreen','clipped','smallTargets','smallVisible','smallText','truncated','brokenImages','forbidden','consoleErrors','failedRequests','h1TooManyLines') if r.get(k)]
         flags += [k for k in ('keepMissing','notInFirstScreen','keepCovered') if any(x[k] for x in r['keep'])]
         small = f" 最小字 {r['smallText'][0]['px']}px" if r.get('smallText') else ''
         print(f"{'PASS' if r['pass'] else 'FAIL'} {r['width']:>5} {r['url']} 状态：{r['state']} {' '.join(flags)}{small}")
