@@ -20,6 +20,9 @@
   - `side_by_side.py`：前后对比拼图。
   - `seo_keep.py`：对照改版前后的标题、描述、规范链接和结构化数据，发布前确认没有变少。
   - `wait_live.py`：等线上页面和它引用的样式、脚本真的换成新版本。
+  - `asset_check.py`：不开浏览器查全站每个页面和样式表引用的本地文件在不在。
+  - `snapshot.py`：从提交导出给评审看的冻结快照，工作区有没提交的文件就拒绝，导出后查全站资源。
+  - `split_commits.py`：工作区攒了几件改动时，按一份拆法（关键词认领改动块）一件一个提交，先列出归属不清的改动块。
   都在真实网站上跑过。
 - **模板**（`templates/`）：任务说明和迭代日志，开工直接复制来填。
 
@@ -43,6 +46,6 @@ bash install.sh codex    # 只装 Codex
 
 - 一个前端设计规则技能（比如 design-taste-frontend）：装了会按它的设计规则来。
 - 一个生图工具：画面优先用生成图片。
-- 跑 `scripts/` 里的工具需要 Python 3、Playwright（`pip install playwright && playwright install chromium`）和 Pillow。
+- 跑 `scripts/` 里的工具需要 Python 3、Playwright（`pip install playwright && playwright install chromium`）和 Pillow；`asset_check.py` 还要 beautifulsoup4 和 tinycss2。
 
 MIT License
