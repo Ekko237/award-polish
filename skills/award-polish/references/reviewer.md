@@ -22,7 +22,7 @@ After every batch, and before finishing, start **fresh** subagents as reviewers 
 - **Features using the microphone or camera**: the operating notes give the test browser flags `--use-fake-device-for-media-stream --use-fake-ui-for-media-stream` and grant the page's origin `context.grant_permissions(["microphone"], origin=...)`, so the browser feeds a test tone as the mic.
 - The list of **deliberate flaws** in demo props (a test shop deliberately missing sizes): targets the product is meant to find; no deductions. This is the only "design intent" reviewers may be told.
 - Looks the user rejected ("rejected looks" in the brief): only used in the part where reviewers suggest redesign directions, so they do not suggest those. It does not affect scores.
-- Reference award-site screenshots in refs/, with each site's name and award.
+- Reference screenshots of award sites in refs/, with each site's name and award.
 - The 10 item names, this file's anchors, and the project's "what each score looks like".
 - One line of product type and context (e.g. "back-office tool for merchants, hackathon project"), so retention is judged the right way: tools on rechecks, progress and reminders, with no deductions for missing levels or points.
 - When the core flow calls a paid API (e.g. running an AI job), give reviewers demo data or a recorded replay to walk through; running it for real needs the user's OK first, because it spends money.

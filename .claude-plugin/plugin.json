@@ -1,5 +1,5 @@
 {
-  "name": "award-site",
+  "name": "award-polish",
   "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar: improve in batches scored by independent reviewers on one calibrated ruler, with blind side-by-side checks against the best version so far and a layout checker for overflow, covered buttons and clipped elements at five widths.",
   "version": "1.0.0",
   "author": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/Ekko237"
   },
   "license": "MIT",
-  "homepage": "https://github.com/Ekko237/award-site",
+  "homepage": "https://github.com/Ekko237/award-polish",
   "keywords": [
     "web-design",
     "awwwards",
