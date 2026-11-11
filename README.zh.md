@@ -1,18 +1,24 @@
-# award-polish
-
-[![License: MIT](https://img.shields.io/github/license/Ekko237/award-polish)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/Ekko237/award-polish)](https://github.com/Ekko237/award-polish/releases/latest)
-[![Changelog](https://img.shields.io/badge/changelog-read-blue)](CHANGELOG.md)
+<h1 align="center">award-polish</h1>
 
 **一个打磨网站、网页应用和 App 界面的 agent 技能：拿 Awwwards 获奖站当标杆，评审分数靠得住。**
 
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Ekko237/award-polish?style=flat&color=24292f" alt="License: MIT" /></a>
+  &nbsp;
+  <a href="https://github.com/Ekko237/award-polish/releases/latest"><img src="https://img.shields.io/github/v/release/Ekko237/award-polish?style=flat&color=24292f" alt="Latest release" /></a>
+  &nbsp;
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-read-24292f?style=flat" alt="Changelog" /></a>
+</p>
+
+<p align="center"><a href="README.md">English</a></p>
+
+<p align="center">
+  <img src="media/showcase-zh-v2.png" width="100%" alt="用 award-polish 打磨过的六个作品，电脑版和手机版" />
+</p>
+
 已在 Claude Code 和 Codex 上测过。文件夹就是普通的 Markdown 加 Python，其他能加载技能文件夹的 agent 也许能用，但还没测过。
 
-[English](README.md)
-
 ## 用它打磨过的作品
-
-![用 award-polish 打磨过的六个作品，电脑版和手机版](media/showcase-zh-v2.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
@@ -52,11 +58,25 @@ python3 skills/award-polish/scripts/layout_check.py https://你的网站 --out c
 
 ## 安装
 
+```bash
+npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
+```
+
+这条命令用 [`npx skills`](https://github.com/vercel-labs/agent-skills) 命令行安装这个技能。
+
+<details>
+<summary>Claude Code 插件</summary>
+
 Claude Code：
 
 ```bash
 claude plugin install award-polish --marketplace Ekko237/award-polish
 ```
+
+</details>
+
+<details>
+<summary>Codex 插件</summary>
 
 Codex：
 
@@ -64,6 +84,8 @@ Codex：
 codex plugin marketplace add Ekko237/award-polish
 codex plugin add award-polish@award-polish
 ```
+
+</details>
 
 这两条命令只安装技能。Python 包要另外装：Python 3、Playwright 的 Chromium 和 Pillow。`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计技能（比如 design-taste-frontend），以及一个生图工具。
 
@@ -111,19 +133,23 @@ Windows 可以把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\skills\
 
 - `skills/award-polish/SKILL.md`：循环本身（目标、过程、检查迭代）、收工条件和红线。
 - `skills/award-polish/references/`：新站和改版两种模式、怎么看获奖站、打分的尺子、怎么开评审、打磨清单、上线、黑客松，以及从真实项目里攒下的经验。
-- `skills/award-polish/scripts/`（用法见 `skills/award-polish/references/scripts.md`），都在真实网站上跑过：
-  - `layout_check.py`：多宽度截图和布局检查、首屏关键元素、操作后的状态。
-  - `record_moment.py`：用虚拟时钟逐格录动效，评审看静态图也能打动效分。
-  - `sound_levels.py`：逐步记录音量电平，给在无头浏览器里听不到声音的评审看。
-  - `review_prompt.py`：生成盲评提示词，截图换成看不出版本的目录名。
-  - `calibrate.py`：定标卷校正、取平均、Awwwards 加权分，并按盲比定结论。
-  - `side_by_side.py`：从网址或图片拼出带标签的前后对比图。
-  - `seo_keep.py`：对照改版前后的标题、描述、规范链接和结构化数据，改版不丢搜索字段。
-  - `wait_live.py`：等线上页面和它引用的样式、脚本真的换成新版本。
-  - `asset_check.py`：不开浏览器，查全站每个页面引用的本地文件在不在。
-  - `snapshot.py`：给评审的快照只从提交导出，没提交的文件不会变成 404。
-  - `split_commits.py`：工作区攒了几件改动时，按关键词拆成一件一个提交。
 - `skills/award-polish/templates/`：任务说明、迭代日志、评审提示词和评审配置。
+
+`skills/award-polish/scripts/`（用法见 `skills/award-polish/references/scripts.md`），都在真实网站上跑过：
+
+| 脚本 | 做什么 |
+| --- | --- |
+| `layout_check.py` | 多宽度截图和布局检查、首屏关键元素、操作后的状态。 |
+| `record_moment.py` | 用虚拟时钟逐格录动效，评审看静态图也能打动效分。 |
+| `sound_levels.py` | 逐步记录音量电平，给在无头浏览器里听不到声音的评审看。 |
+| `review_prompt.py` | 生成盲评提示词，截图换成看不出版本的目录名。 |
+| `calibrate.py` | 定标卷校正、取平均、Awwwards 加权分，并按盲比定结论。 |
+| `side_by_side.py` | 从网址或图片拼出带标签的前后对比图。 |
+| `seo_keep.py` | 对照改版前后的标题、描述、规范链接和结构化数据，改版不丢搜索字段。 |
+| `wait_live.py` | 等线上页面和它引用的样式、脚本真的换成新版本。 |
+| `asset_check.py` | 不开浏览器，查全站每个页面引用的本地文件在不在。 |
+| `snapshot.py` | 给评审的快照只从提交导出，没提交的文件不会变成 404。 |
+| `split_commits.py` | 工作区攒了几件改动时，按关键词拆成一件一个提交。 |
 
 ## 常见问题
 
@@ -151,4 +177,4 @@ Claude Code 和 Codex。其他能加载技能文件夹的 agent 也许能用，�
 
 MIT
 
-用过了？开一个 issue，告诉我哪里坏了，或者你做出了什么。
+<sub>用过了？开一个 issue，告诉我哪里坏了，或者你做出了什么。</sub>
