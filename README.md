@@ -1,18 +1,24 @@
-# award-polish
-
-[![License: MIT](https://img.shields.io/github/license/Ekko237/award-polish)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/Ekko237/award-polish)](https://github.com/Ekko237/award-polish/releases/latest)
-[![Changelog](https://img.shields.io/badge/changelog-read-blue)](CHANGELOG.md)
+<h1 align="center">award-polish</h1>
 
 **An agent skill for polishing websites, web apps and app interfaces, with Awwwards winners as the bar and reviews you can trust.**
 
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Ekko237/award-polish?style=flat&color=24292f" alt="License: MIT" /></a>
+  &nbsp;
+  <a href="https://github.com/Ekko237/award-polish/releases/latest"><img src="https://img.shields.io/github/v/release/Ekko237/award-polish?style=flat&color=24292f" alt="Latest release" /></a>
+  &nbsp;
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-read-24292f?style=flat" alt="Changelog" /></a>
+</p>
+
+<p align="center"><a href="README.zh.md">中文说明</a></p>
+
+<p align="center">
+  <img src="media/showcase-v2.png" width="100%" alt="Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, desktop and phone, all polished with this skill" />
+</p>
+
 Tested with Claude Code and Codex. The folder is plain Markdown plus Python, so other agents that load skill folders may work, but they are untested.
 
-[中文说明](README.zh.md)
-
 ## Polished with award-polish
-
-![Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, desktop and phone, all polished with this skill](media/showcase-v2.png)
 
 - [Island Evolution](https://islandevolution.com/): a browser puzzle game's website; the scroll-driven walkthrough of one game is the part to see.
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
@@ -52,11 +58,25 @@ You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: h
 
 ## Install
 
+```bash
+npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
+```
+
+That installs the skill with the [`npx skills`](https://github.com/vercel-labs/agent-skills) CLI.
+
+<details>
+<summary>Claude Code plugin</summary>
+
 Claude Code:
 
 ```bash
 claude plugin install award-polish --marketplace Ekko237/award-polish
 ```
+
+</details>
+
+<details>
+<summary>Codex plugin</summary>
 
 Codex:
 
@@ -64,6 +84,8 @@ Codex:
 codex plugin marketplace add Ekko237/award-polish
 codex plugin add award-polish@award-polish
 ```
+
+</details>
 
 These commands install the skill. Python packages are separate: Python 3, Playwright with Chromium, and Pillow. `asset_check.py` also needs beautifulsoup4 and tinycss2. `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator.
 
@@ -111,21 +133,25 @@ Claude Code and Codex can also be pointed at `skills/award-polish/SKILL.md`. Sla
 
 - `skills/award-polish/SKILL.md`: the loop (goal, process, check and iterate), finish conditions and red lines.
 - `skills/award-polish/references/`: new-site and redesign modes, how to study award sites, the scoring ruler, how to run reviewers, the polish checklist, shipping, hackathons, and lessons from real projects.
-- `skills/award-polish/scripts/` (usage in `skills/award-polish/references/scripts.md`), all run on real sites:
-  - `layout_check.py`: multi-width screenshots and layout checks, key elements in the first screen, states after interactions.
-  - `record_moment.py`: frame-by-frame recording of animations on a virtual clock, so reviewers can judge motion from stills.
-  - `sound_levels.py`: per-step audio levels, for reviewers who cannot hear in a headless browser.
-  - `review_prompt.py`: blind reviewer prompts with anonymized screenshot sets.
-  - `calibrate.py`: anchor calibration, averaging, Awwwards-weighted scores, and the verdict from the blind side-by-side.
-  - `side_by_side.py`: labelled before/after images from URLs or files.
-  - `seo_keep.py`: titles, descriptions, canonicals and structured data before vs after, so a redesign never loses search fields.
-  - `wait_live.py`: waits until the live page and its CSS and JS really serve the new version.
-  - `asset_check.py`: every local file every page references exists, without a browser.
-  - `snapshot.py`: review snapshots exported from commits only, so nothing uncommitted turns into a 404.
-  - `split_commits.py`: splits piled-up changes into one commit each by keyword.
 - `skills/award-polish/templates/`: the polish brief, iteration log, reviewer prompt and reviewer config.
 
-## Common questions
+`skills/award-polish/scripts/` (usage in `skills/award-polish/references/scripts.md`), all run on real sites:
+
+| Script | What it does |
+| --- | --- |
+| `layout_check.py` | multi-width screenshots and layout checks, key elements in the first screen, states after interactions. |
+| `record_moment.py` | frame-by-frame recording of animations on a virtual clock, so reviewers can judge motion from stills. |
+| `sound_levels.py` | per-step audio levels, for reviewers who cannot hear in a headless browser. |
+| `review_prompt.py` | blind reviewer prompts with anonymized screenshot sets. |
+| `calibrate.py` | anchor calibration, averaging, Awwwards-weighted scores, and the verdict from the blind side-by-side. |
+| `side_by_side.py` | labelled before/after images from URLs or files. |
+| `seo_keep.py` | titles, descriptions, canonicals and structured data before vs after, so a redesign never loses search fields. |
+| `wait_live.py` | waits until the live page and its CSS and JS really serve the new version. |
+| `asset_check.py` | every local file every page references exists, without a browser. |
+| `snapshot.py` | review snapshots exported from commits only, so nothing uncommitted turns into a 404. |
+| `split_commits.py` | splits piled-up changes into one commit each by keyword. |
+
+## Common Questions
 
 **Does a project need an Awwwards win?**
 
@@ -151,4 +177,4 @@ Yes. Clone the repo and run the layout checker. See [Try one tool in a minute](#
 
 MIT
 
-Tried it? Open an issue and tell me what broke or what you made.
+<sub>Tried it? Open an issue and tell me what broke or what you made.</sub>
