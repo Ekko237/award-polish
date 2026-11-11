@@ -65,7 +65,7 @@ bash install.sh codex             # 只装 Codex
 bash install.sh /你的/skills/目录   # 别的 agent：装到它读取技能的那个文件夹
 ```
 
-Windows 用 Git Bash 运行 `install.sh`，或手动把 `skills/award-polish` 文件夹复制到 agent 的技能目录。
+Windows 可以手动把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\skills\award-polish` 或 `%USERPROFILE%\.codex\skills\award-polish`。Git Bash 安装了 `rsync` 后也能运行 `install.sh`。
 
 没有技能文件夹的 agent，直接让它读 `skills/award-polish/SKILL.md` 就行。装好后，说「把这个网站打磨到获奖水平」或者「用 award-polish 技能」；支持斜杠命令的 agent 也可以用 `/award-polish`。技能正文是英文写的，AI 跟你说话照样用你的语言。
 

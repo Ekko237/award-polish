@@ -65,7 +65,7 @@ bash install.sh codex             # Codex only
 bash install.sh /path/to/skills   # any other agent: the folder it loads skills from
 ```
 
-On Windows, run `install.sh` in Git Bash, or copy the `skills/award-polish` folder into the agent's skills folder by hand.
+On Windows, copy `skills/award-polish` to `%USERPROFILE%\.claude\skills\award-polish` or `%USERPROFILE%\.codex\skills\award-polish`. Git Bash can run `install.sh` when `rsync` is installed.
 
 Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` directly. Then ask it to "polish this site to award level" or "use the award-polish skill"; agents with slash commands also take `/award-polish`.
 
