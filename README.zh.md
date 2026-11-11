@@ -1,4 +1,4 @@
-# award-site
+# award-polish
 
 **一个打磨网站、网页应用和 App 界面的 agent 技能：拿 Awwwards 获奖站当标杆，评审分数靠得住。**
 
@@ -8,13 +8,13 @@
 
 ## 用它打磨过的作品
 
-![用 award-site 打磨过的六个作品，电脑版和手机版](media/showcase-zh-v2.png)
+![用 award-polish 打磨过的六个作品，电脑版和手机版](media/showcase-zh-v2.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults)：黑客松上四人队做的作品，老人开口就能用的平板端，加上子女用的手机端。
 - [SONIFIZZ 声汽海报机](https://ekko237.github.io/sonifizz-poster/)（[源码](https://github.com/Ekko237/sonifizz-poster)）：音乐节展位上的竖屏触摸机原型，一分钟印出一张自己的海报。
-- [顺路侠](https://ekko237.github.io/campus-errand/?lang=zh)（[源码](https://github.com/Ekko237/campus-errand)）：校园跑腿互助 App 原型。
+- [顺路侠](https://ekko237.github.io/shunluxia-campus-errand/?lang=zh)（[源码](https://github.com/Ekko237/shunluxia-campus-errand)）：校园跑腿互助 App 原型。
 - [三角洲国际服改枪码](https://dfgqm.com/)：游戏改枪码站，做了两轮改版。
 
 同一份需求，大家做出来的功能差不多，一个产品能不能拉开差距，靠的是视觉、交互、动效和流畅度。光靠 AI 自己打磨很难做好：它给自己打分偏松，小修小补会卡住，「做得更好」也没有终点。这个技能把打磨变成一个有尺子的循环。
@@ -39,9 +39,9 @@ Awwwards 只是我们对照的标杆，上面这些作品还没有一个拿过 A
 布局体检脚本对任何网站都能用，不用先装技能：
 
 ```bash
-git clone https://github.com/Ekko237/award-site && cd award-site
+git clone https://github.com/Ekko237/award-polish && cd award-polish
 pip install playwright pillow && playwright install chromium
-python3 skills/award-site/scripts/layout_check.py https://你的网站 --out check --keep "main=.你的主按钮"
+python3 skills/award-polish/scripts/layout_check.py https://你的网站 --out check --keep "main=.你的主按钮"
 ```
 
 会得到 375、768、1024、1280、1440 五档宽度的截图和 `check/report.json`：横向溢出、被裁掉的描边和阴影、被截断的文字、超过两行的标题、控制台报错、坏图、小于 44px 的点击区、实际显示小于 12px 的字，还有主按钮在不在第一屏、有没有被横幅盖住。
@@ -51,10 +51,10 @@ python3 skills/award-site/scripts/layout_check.py https://你的网站 --out che
 **Claude Code（插件）**：
 
 ```
-/plugin install award-site --marketplace Ekko237/award-site
+/plugin install award-polish --marketplace Ekko237/award-polish
 ```
 
-旧版本先 `/plugin marketplace add Ekko237/award-site`，再 `/plugin install award-site@award-site`。
+旧版本先 `/plugin marketplace add Ekko237/award-polish`，再 `/plugin install award-polish@award-polish`。
 
 **任何 agent（普通技能文件夹）**：
 
@@ -65,11 +65,13 @@ bash install.sh codex             # 只装 Codex
 bash install.sh /你的/skills/目录   # 别的 agent：装到它读取技能的那个文件夹
 ```
 
-没有技能文件夹的 agent，直接让它读 `skills/award-site/SKILL.md` 就行。装好后，说「把这个网站打磨到获奖水平」或者「用 award-site 技能」；支持斜杠命令的 agent 也可以用 `/award-site`。技能正文是英文写的，AI 跟你说话照样用你的语言。
+Windows 用 Git Bash 运行 `install.sh`，或手动把 `skills/award-polish` 文件夹复制到 agent 的技能目录。
+
+没有技能文件夹的 agent，直接让它读 `skills/award-polish/SKILL.md` 就行。装好后，说「把这个网站打磨到获奖水平」或者「用 award-polish 技能」；支持斜杠命令的 agent 也可以用 `/award-polish`。技能正文是英文写的，AI 跟你说话照样用你的语言。
 
 ## 里面有什么
 
-- `skills/award-site/SKILL.md`：循环本身（目标、过程、检查迭代）、收工条件和红线。
+- `skills/award-polish/SKILL.md`：循环本身（目标、过程、检查迭代）、收工条件和红线。
 - `references/`：新站和改版两种模式、怎么看获奖站、打分的尺子、怎么开评审、打磨清单、上线、黑客松，以及从真实项目里攒下的经验。
 - `scripts/`（用法见 `references/scripts.md`），都在真实网站上跑过：
   - `layout_check.py`：多宽度截图和布局检查、首屏关键元素、操作后的状态。

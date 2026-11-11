@@ -1,9 +1,9 @@
 ---
-name: award-site
+name: award-polish
 description: Polish anything that runs in a browser (websites, web apps, prototypes, tablet or phone app interfaces built on the web) toward Awwwards award level, in two modes: 1. Creating a new website (build something new to award standard from the start); 2. Redesigning an existing website (polish or redesign something that already runs). First study a set of real award-winning sites of the same kind, then polish on localhost in batches of "goal / process / check and iterate": every batch is scored on 10 items by independent reviewers who did not build it, using one shared ruler (anchor-set calibration, two reviewers averaged, blind side-by-side against the best version so far); before/after images go to the user regularly; ship only when it is good (deploy first only when a reachable link is required up front). Stop and report on the finish conditions, when stuck, or at a hard deadline. Use it when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", "use Awwwards as the bar", or when a timed take-home, portfolio, landing page or hackathon project needs finishing.
 ---
 
-# award-site: polish an interface toward award level
+# award-polish: polish an interface toward award level
 
 Given the same brief, everyone ships about the same features; the gap comes from visuals, UI, motion, smoothness and interaction. The finish line is real users finding it **easy to use, good-looking and smooth, and wanting to come back**. Every change must say which part of the product it makes better.
 
@@ -35,7 +35,7 @@ Look in the conversation and project files (README, ITERATION_LOG.md); where not
 - **Budget**: at kickoff, estimate how many rounds this is worth; when tight, fix only fatal and experience problems, or push a branch, write a handoff and continue in a cloud session.
 - **Subagents**: reviews, blind tests and small reviews all use your own fresh subagents, a new one each time (if your agent has no subagents, use a separate new agent session for each). Their prompts say to use only a headless Playwright browser, and if it will not start, stop and return the error text; never switch to the user's own browser, desktop control, or install a browser. Check what comes back before counting it. **When the user stops subagents**, the main session scores reviews itself following `references/reviewer.md`, the log says "scored by the main session, not an independent review", and the independent-review finish condition becomes the user approving side-by-side images.
 - **Machine**: check memory first (macOS `sysctl -n hw.memsize`, Linux `free -g`). At 8GB or less run one browser job at a time (screenshots, checks, reviews, Lighthouse in sequence, one reviewer at a time).
-- **Where the scripts are**: bundled scripts live in `<skill dir>/scripts`. `<skill dir>` is where this skill is installed (for example ~/.claude/skills/award-site, ~/.codex/skills/award-site, a plugin's copy, or wherever your agent keeps skills).
+- **Where the scripts are**: bundled scripts live in `<skill dir>/scripts`. `<skill dir>` is where this skill is installed (for example ~/.claude/skills/award-polish, ~/.codex/skills/award-polish, a plugin's copy, or wherever your agent keeps skills).
 - **When the user does not want questions, only results**: make the choices yourself and write them in the log and report; send side-by-side images without waiting. Direction-level redesigns (new key visual, type system, color system, site concept) need the user to pick from images; if the user does not look at images, only push the baseline look further.
 
 ## Study award-winning sites as the bar (once, keep the notes)

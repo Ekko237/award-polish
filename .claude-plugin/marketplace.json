@@ -1,15 +1,15 @@
 {
-  "name": "award-site",
+  "name": "award-polish",
   "owner": {
     "name": "Ekko237",
     "url": "https://github.com/Ekko237"
   },
   "metadata": {
-    "description": "award-site: an agent skill for polishing websites, web apps and app interfaces with Awwwards winners as the bar and a calibrated, blind review loop."
+    "description": "award-polish: an agent skill for polishing websites, web apps and app interfaces with Awwwards winners as the bar and a calibrated, blind review loop."
   },
   "plugins": [
     {
-      "name": "award-site",
+      "name": "award-polish",
       "source": "./",
       "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar: improve in batches scored by independent reviewers on one calibrated ruler, with blind side-by-side checks against the best version so far and a layout checker for overflow, covered buttons and clipped elements at five widths.",
       "version": "1.0.0",
@@ -17,7 +17,7 @@
         "name": "Ekko237",
         "url": "https://github.com/Ekko237"
       },
-      "homepage": "https://github.com/Ekko237/award-site",
+      "homepage": "https://github.com/Ekko237/award-polish",
       "license": "MIT",
       "keywords": [
         "web-design",

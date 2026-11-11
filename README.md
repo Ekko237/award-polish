@@ -1,4 +1,4 @@
-# award-site
+# award-polish
 
 **An agent skill for polishing websites, web apps and app interfaces, with Awwwards winners as the bar and reviews you can trust.**
 
@@ -6,7 +6,7 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 
 [中文说明](README.zh.md)
 
-## Polished with award-site
+## Polished with award-polish
 
 ![Island Evolution, Today's Mealow, Milo, SONIFIZZ, Shunluxia and DF Loadouts, desktop and phone, all polished with this skill](media/showcase-v2.png)
 
@@ -14,7 +14,7 @@ Plain Markdown plus Python scripts, so any coding agent that can read files and 
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
 - [Milo](https://devpost.com/software/milo-shopping-that-understands-older-adults): a hackathon build by a team of four, a voice-first tablet app for older adults plus a phone app for their families.
 - [SONIFIZZ Poster Kiosk](https://ekko237.github.io/sonifizz-poster/) ([code](https://github.com/Ekko237/sonifizz-poster)): a touch-kiosk prototype for a festival booth that prints your own poster in a minute.
-- [Shunluxia](https://ekko237.github.io/campus-errand/?lang=en) ([code](https://github.com/Ekko237/campus-errand)): a campus errand app prototype where classmates already walking past the parcel station bring your package back.
+- [Shunluxia](https://ekko237.github.io/shunluxia-campus-errand/?lang=en) ([code](https://github.com/Ekko237/shunluxia-campus-errand)): a campus errand app prototype where classmates already walking past the parcel station bring your package back.
 - [DF Loadouts](https://dfgqm.com/en): a game loadout code site, polished over two redesign rounds.
 
 Given the same brief, everyone ships about the same features. What makes one product stand out is visuals, interaction, motion and smoothness, and that is hard to improve with an AI agent alone: it grades its own work generously, small fixes stall, and "make it better" has no finish line. This skill turns polishing into a loop with a real ruler.
@@ -39,9 +39,9 @@ How the loop works:
 The layout checker works on any site, no skill install needed:
 
 ```bash
-git clone https://github.com/Ekko237/award-site && cd award-site
+git clone https://github.com/Ekko237/award-polish && cd award-polish
 pip install playwright pillow && playwright install chromium
-python3 skills/award-site/scripts/layout_check.py https://your-site.com --out check --keep "main=.your-main-button"
+python3 skills/award-polish/scripts/layout_check.py https://your-site.com --out check --keep "main=.your-main-button"
 ```
 
 You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: horizontal overflow, clipped outlines and shadows, truncated text, headings over two lines, console errors, broken images, tap targets under 44px, text rendered under 12px, and whether your main button is fully in the first screen and not covered by a banner.
@@ -51,10 +51,10 @@ You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: h
 **Claude Code (plugin)**:
 
 ```
-/plugin install award-site --marketplace Ekko237/award-site
+/plugin install award-polish --marketplace Ekko237/award-polish
 ```
 
-On older versions: `/plugin marketplace add Ekko237/award-site`, then `/plugin install award-site@award-site`.
+On older versions: `/plugin marketplace add Ekko237/award-polish`, then `/plugin install award-polish@award-polish`.
 
 **Any agent (plain skill folder)**:
 
@@ -65,11 +65,13 @@ bash install.sh codex             # Codex only
 bash install.sh /path/to/skills   # any other agent: the folder it loads skills from
 ```
 
-Agents without a skills folder can be pointed at `skills/award-site/SKILL.md` directly. Then ask it to "polish this site to award level" or "use the award-site skill"; agents with slash commands also take `/award-site`.
+On Windows, run `install.sh` in Git Bash, or copy the `skills/award-polish` folder into the agent's skills folder by hand.
+
+Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` directly. Then ask it to "polish this site to award level" or "use the award-polish skill"; agents with slash commands also take `/award-polish`.
 
 ## What is inside
 
-- `skills/award-site/SKILL.md`: the loop (goal, process, check and iterate), finish conditions and red lines.
+- `skills/award-polish/SKILL.md`: the loop (goal, process, check and iterate), finish conditions and red lines.
 - `references/`: new-site and redesign modes, how to study award sites, the scoring ruler, how to run reviewers, the polish checklist, shipping, hackathons, and lessons from real projects.
 - `scripts/` (usage in `references/scripts.md`), all run on real sites:
   - `layout_check.py`: multi-width screenshots and layout checks, key elements in the first screen, states after interactions.
