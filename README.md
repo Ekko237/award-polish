@@ -52,22 +52,35 @@ You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: h
 
 ## Install
 
+Claude Code:
+
 ```bash
-git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
+claude plugin install award-polish --marketplace Ekko237/award-polish
 ```
 
-Needs Python 3, Playwright with Chromium, and Pillow. The installer uses rsync. `asset_check.py` also needs beautifulsoup4 and tinycss2. `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator.
+Codex:
 
-It installs into `~/.claude/skills/award-polish`, `~/.codex/skills/award-polish`, or both, wherever `~/.claude` or `~/.codex` already exists. If neither exists, the script stops and asks for a skills path. That path is in the details below.
+```bash
+codex plugin marketplace add Ekko237/award-polish
+codex plugin add award-polish@award-polish
+```
+
+These commands install the skill. Python packages are separate: Python 3, Playwright with Chromium, and Pillow. `asset_check.py` also needs beautifulsoup4 and tinycss2. `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator.
 
 Verify: ask "polish this site to award level". You should see a short reply, and `ITERATION_LOG.md` with the mode on the first line (new site or redesign).
-
-Update: in the clone, run `git pull` and then `bash install.sh`. The copy keeps extra files you added in the installed folder.
 
 The skill text is English. The agent still replies in your language.
 
 <details>
-<summary>Other ways to install</summary>
+<summary>Folder install</summary>
+
+```bash
+git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
+```
+
+The installer uses rsync. It installs into `~/.claude/skills/award-polish`, `~/.codex/skills/award-polish`, or both, wherever `~/.claude` or `~/.codex` already exists. If neither exists, the script stops and asks for a skills path.
+
+Update: in the clone, run `git pull` and then `bash install.sh`. The copy keeps extra files you added in the installed folder.
 
 From a checkout you already have:
 

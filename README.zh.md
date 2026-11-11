@@ -52,22 +52,35 @@ python3 skills/award-polish/scripts/layout_check.py https://你的网站 --out c
 
 ## 安装
 
+Claude Code：
+
 ```bash
-git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
+claude plugin install award-polish --marketplace Ekko237/award-polish
 ```
 
-需要 Python 3、Playwright 的 Chromium 和 Pillow。安装脚本要用 rsync。`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计技能（比如 design-taste-frontend），以及一个生图工具。
+Codex：
 
-已有 `~/.claude` 或 `~/.codex` 时，技能会装进对应的 `skills/award-polish`。两个都有就都装。两个都没有时，脚本会停下，并要求你给出技能目录。这个路径写在下面的折叠说明里。
+```bash
+codex plugin marketplace add Ekko237/award-polish
+codex plugin add award-polish@award-polish
+```
+
+这两条命令只安装技能。Python 包要另外装：Python 3、Playwright 的 Chromium 和 Pillow。`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计技能（比如 design-taste-frontend），以及一个生图工具。
 
 验证：说「把这个网站打磨到获奖水平」。你应该看到一段短回复，以及 `ITERATION_LOG.md`，第一行写明模式（新站或改版）。
-
-更新：在这份仓库里先 `git pull`，再运行 `bash install.sh`。复制时会保留你在已安装文件夹里自己加的文件。
 
 技能正文是英文。回复仍用你的语言。
 
 <details>
-<summary>其他安装方式</summary>
+<summary>文件夹安装</summary>
+
+```bash
+git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
+```
+
+安装脚本要用 rsync。已有 `~/.claude` 或 `~/.codex` 时，技能会装进对应的 `skills/award-polish`。两个都有就都装。两个都没有时，脚本会停下，并要求你给出技能目录。
+
+更新：在这份仓库里先 `git pull`，再运行 `bash install.sh`。复制时会保留你在已安装文件夹里自己加的文件。
 
 已经有一份仓库时：
 
