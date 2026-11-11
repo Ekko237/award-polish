@@ -72,8 +72,8 @@ Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` 
 ## What is inside
 
 - `skills/award-polish/SKILL.md`: the loop (goal, process, check and iterate), finish conditions and red lines.
-- `references/`: new-site and redesign modes, how to study award sites, the scoring ruler, how to run reviewers, the polish checklist, shipping, hackathons, and lessons from real projects.
-- `scripts/` (usage in `references/scripts.md`), all run on real sites:
+- `skills/award-polish/references/`: new-site and redesign modes, how to study award sites, the scoring ruler, how to run reviewers, the polish checklist, shipping, hackathons, and lessons from real projects.
+- `skills/award-polish/scripts/` (usage in `skills/award-polish/references/scripts.md`), all run on real sites:
   - `layout_check.py`: multi-width screenshots and layout checks, key elements in the first screen, states after interactions.
   - `record_moment.py`: frame-by-frame recording of animations on a virtual clock, so reviewers can judge motion from stills.
   - `sound_levels.py`: per-step audio levels, for reviewers who cannot hear in a headless browser.
@@ -85,7 +85,7 @@ Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` 
   - `asset_check.py`: every local file every page references exists, without a browser.
   - `snapshot.py`: review snapshots exported from commits only, so nothing uncommitted turns into a 404.
   - `split_commits.py`: splits piled-up changes into one commit each by keyword.
-- `templates/`: the polish brief, iteration log, reviewer prompt and reviewer config.
+- `skills/award-polish/templates/`: the polish brief, iteration log, reviewer prompt and reviewer config.
 
 ## Requirements
 

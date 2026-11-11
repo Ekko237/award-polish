@@ -72,8 +72,8 @@ Windows 可以手动把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\s
 ## 里面有什么
 
 - `skills/award-polish/SKILL.md`：循环本身（目标、过程、检查迭代）、收工条件和红线。
-- `references/`：新站和改版两种模式、怎么看获奖站、打分的尺子、怎么开评审、打磨清单、上线、黑客松，以及从真实项目里攒下的经验。
-- `scripts/`（用法见 `references/scripts.md`），都在真实网站上跑过：
+- `skills/award-polish/references/`：新站和改版两种模式、怎么看获奖站、打分的尺子、怎么开评审、打磨清单、上线、黑客松，以及从真实项目里攒下的经验。
+- `skills/award-polish/scripts/`（用法见 `skills/award-polish/references/scripts.md`），都在真实网站上跑过：
   - `layout_check.py`：多宽度截图和布局检查、首屏关键元素、操作后的状态。
   - `record_moment.py`：用虚拟时钟逐格录动效，评审看静态图也能打动效分。
   - `sound_levels.py`：逐步记录音量电平，给在无头浏览器里听不到声音的评审看。
@@ -85,7 +85,7 @@ Windows 可以手动把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\s
   - `asset_check.py`：不开浏览器，查全站每个页面引用的本地文件在不在。
   - `snapshot.py`：给评审的快照只从提交导出，没提交的文件不会变成 404。
   - `split_commits.py`：工作区攒了几件改动时，按关键词拆成一件一个提交。
-- `templates/`：任务说明、迭代日志、评审提示词和评审配置。
+- `skills/award-polish/templates/`：任务说明、迭代日志、评审提示词和评审配置。
 
 ## 需要什么
 
