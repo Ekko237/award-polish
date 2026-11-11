@@ -1,8 +1,12 @@
 # award-polish
 
+[![License: MIT](https://img.shields.io/github/license/Ekko237/award-polish)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/Ekko237/award-polish)](https://github.com/Ekko237/award-polish/releases/latest)
+[![Changelog](https://img.shields.io/badge/changelog-read-blue)](CHANGELOG.md)
+
 **An agent skill for polishing websites, web apps and app interfaces, with Awwwards winners as the bar and reviews you can trust.**
 
-Plain Markdown plus Python scripts, so any coding agent that can read files and run commands can use it; Claude Code and Codex load it as a skill directly.
+Tested with Claude Code and Codex. The folder is plain Markdown plus Python, so other agents that load skill folders may work, but they are untested.
 
 [中文说明](README.zh.md)
 
@@ -48,26 +52,47 @@ You get screenshots at 375, 768, 1024, 1280 and 1440 plus `check/report.json`: h
 
 ## Install
 
-**Claude Code (plugin)**:
-
-```
-/plugin install award-polish --marketplace Ekko237/award-polish
+```bash
+git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
 ```
 
-On older versions: `/plugin marketplace add Ekko237/award-polish`, then `/plugin install award-polish@award-polish`.
+Needs Python 3, Playwright with Chromium, and Pillow. The installer uses rsync. `asset_check.py` also needs beautifulsoup4 and tinycss2. `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator.
 
-**Any agent (plain skill folder)**:
+It installs into `~/.claude/skills/award-polish`, `~/.codex/skills/award-polish`, or both, wherever `~/.claude` or `~/.codex` already exists. If neither exists, the script stops and asks for a skills path. That path is in the details below.
+
+Verify: ask "polish this site to award level". You should see a short reply, and `ITERATION_LOG.md` with the mode on the first line (new site or redesign).
+
+Update: in the clone, run `git pull` and then `bash install.sh`. The copy keeps extra files you added in the installed folder.
+
+The skill text is English. The agent still replies in your language.
+
+<details>
+<summary>Other ways to install</summary>
+
+From a checkout you already have:
 
 ```bash
-bash install.sh                   # ~/.claude/skills and/or ~/.codex/skills, whichever exists
-bash install.sh claude            # Claude Code only
-bash install.sh codex             # Codex only
-bash install.sh /path/to/skills   # any other agent: the folder it loads skills from
+bash install.sh
+```
+
+Claude Code only, or Codex only:
+
+```bash
+bash install.sh claude
+bash install.sh codex
+```
+
+A chosen skills folder:
+
+```bash
+bash install.sh /path/to/skills
 ```
 
 On Windows, copy `skills/award-polish` to `%USERPROFILE%\.claude\skills\award-polish` or `%USERPROFILE%\.codex\skills\award-polish`. Git Bash can run `install.sh` when `rsync` is installed.
 
-Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` directly. Then ask it to "polish this site to award level" or "use the award-polish skill"; agents with slash commands also take `/award-polish`.
+Claude Code and Codex can also be pointed at `skills/award-polish/SKILL.md`. Slash commands take `/award-polish`.
+
+</details>
 
 ## What is inside
 
@@ -87,10 +112,30 @@ Agents without a skills folder can be pointed at `skills/award-polish/SKILL.md` 
   - `split_commits.py`: splits piled-up changes into one commit each by keyword.
 - `skills/award-polish/templates/`: the polish brief, iteration log, reviewer prompt and reviewer config.
 
-## Requirements
+## Common questions
 
-Python 3, Playwright with Chromium, Pillow; `asset_check.py` also needs beautifulsoup4 and tinycss2, `seo_keep.py` needs requests and beautifulsoup4. Optional: a front-end design skill such as design-taste-frontend, and an image generator, since generated pictures are preferred over drawn SVG.
+**Does a project need an Awwwards win?**
+
+Awwwards is the bar the loop aims at. None of the projects above has won an Awwwards award.
+
+**Which browser does the checker use?**
+
+Playwright's headless Chromium. The layout, motion, sound, side-by-side and live-wait scripts all launch that Chromium.
+
+**Does it change my SEO?**
+
+On a redesign it keeps the search fields already on the site: title, description, canonical, hreflang, structured data, H1 and the share card. `seo_keep.py` compares the live site with the new build, and a release waits until that diff is empty. Reviewer ideas to reword the H1, title or description stay out unless you approve them.
+
+**Which agents is it tested with?**
+
+Claude Code and Codex. Other agents that load a skill folder may work. They are untested.
+
+**Can I try a check without installing the skill?**
+
+Yes. Clone the repo and run the layout checker. See [Try one tool in a minute](#try-one-tool-in-a-minute).
 
 ## License
 
 MIT
+
+Tried it? Open an issue and tell me what broke or what you made.

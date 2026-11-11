@@ -27,7 +27,14 @@
         "ui-polish",
         "agent-skills"
       ],
-      "category": "development"
+      "category": "development",
+      "metadata": {
+        "defaultPrompt": [
+          "Polish this site to award level.",
+          "Redesign this page and keep the search fields.",
+          "Build a landing page to award level."
+        ]
+      }
     }
   ]
 }
