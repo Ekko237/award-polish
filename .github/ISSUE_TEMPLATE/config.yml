@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Common questions
+    url: https://github.com/Ekko237/award-polish/blob/main/README.md#common-questions
+    about: Read this before opening a question. A bug report needs the skill version, Claude Code or Codex and its version, your OS, and a transcript excerpt.

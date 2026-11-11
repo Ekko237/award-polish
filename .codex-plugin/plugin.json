@@ -1,0 +1,35 @@
+{
+  "name": "award-polish",
+  "version": "1.0.0",
+  "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar, and check the result in headless Chromium.",
+  "author": {
+    "name": "Ekko237",
+    "url": "https://github.com/Ekko237"
+  },
+  "homepage": "https://github.com/Ekko237/award-polish",
+  "repository": "https://github.com/Ekko237/award-polish",
+  "license": "MIT",
+  "keywords": [
+    "web-design",
+    "awwwards",
+    "design-review",
+    "redesign",
+    "ui-polish",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "award-polish",
+    "shortDescription": "Polish a site toward award level, then check it in Chromium.",
+    "longDescription": "Polish websites, web apps and app interfaces in batches. Two reviewers score 10 items on one ruler. A blind side-by-side decides whether a batch beats the best version so far.",
+    "developerName": "Ekko237",
+    "category": "Design",
+    "capabilities": [],
+    "websiteURL": "https://github.com/Ekko237/award-polish",
+    "defaultPrompt": [
+      "Polish this site to award level.",
+      "Redesign this page and keep the search fields.",
+      "Build a landing page to award level."
+    ]
+  }
+}

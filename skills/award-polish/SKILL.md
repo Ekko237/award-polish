@@ -1,6 +1,6 @@
 ---
 name: award-polish
-description: Polish anything that runs in a browser (websites, web apps, prototypes, tablet or phone app interfaces built on the web) toward Awwwards award level, in two modes: 1. Creating a new website (build something new to award standard from the start); 2. Redesigning an existing website (polish or redesign something that already runs). First study a set of real award-winning sites of the same kind, then polish on localhost in batches of "goal / process / check and iterate": every batch is scored on 10 items by independent reviewers who did not build it, using one shared ruler (anchor-set calibration, two reviewers averaged, blind side-by-side against the best version so far); before/after images go to the user regularly; ship only when it is good (deploy first only when a reachable link is required up front). Stop and report on the finish conditions, when stuck, or at a hard deadline. Use it when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", "use Awwwards as the bar", or when a timed take-home, portfolio, landing page or hackathon project needs finishing.
+description: 'Use when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar", or when a timed take-home, portfolio, landing page or hackathon project needs finishing. Covers a new site and a redesign of anything that runs in a browser.'
 ---
 
 # award-polish: polish an interface toward award level
@@ -8,6 +8,12 @@ description: Polish anything that runs in a browser (websites, web apps, prototy
 Given the same brief, everyone ships about the same features; the gap comes from visuals, UI, motion, smoothness and interaction. The finish line is real users finding it **easy to use, good-looking and smooth, and wanting to come back**. Every change must say which part of the product it makes better.
 
 **The top goal is Awwwards award level**; every other rule is a floor. design-taste-frontend, the polish checklist and the written checks guard against "looks AI-made, has errors"; clearing the floor is not reaching the goal. Scoring, finishing and review references are always Awwwards. Bold techniques common on award sites (custom cursors, scroll storytelling, kinetic type, vertical text, full-screen transitions) are off by default in the taste skill; use them when all three hold: they grow out of the product's core concept; a reference award site uses something similar; they do not hurt usability, performance or reduced-motion. Write the reason in the log; if reviewers call it showing off, remove it.
+
+## When to use
+
+Use this skill when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar". Also use it when a timed take-home, portfolio, landing page or hackathon project needs finishing.
+
+It covers a new site and a redesign of anything that runs in a browser: websites, web apps, prototypes, and tablet or phone app interfaces. The sections below are the workflow: study award sites of the same kind, polish on localhost in batches of goal, process, check and iterate, score each batch on 10 items with two reviewers who did not build it, on one shared ruler, with a blind side-by-side against the best version so far. Before/after images go to the user on the schedule in User checkpoints. Ship only when it is good, and deploy first only when a reachable link is required up front. Finish, stuck, and deadline stops are in When to stop.
 
 ## Pick a mode (decide yourself, do not ask the user)
 

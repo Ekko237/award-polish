@@ -3,8 +3,8 @@
 # Usage: bash install.sh                  (detect ~/.claude and ~/.codex)
 #        bash install.sh claude           (~/.claude/skills/award-polish)
 #        bash install.sh codex            (~/.codex/skills/award-polish)
-#        bash install.sh /path/to/skills  (any other agent: the folder it loads skills from)
-# Claude Code users can also install it as a plugin, see README.md.
+#        bash install.sh /path/to/skills  (copy into a chosen skills folder)
+# Plugin manifests for Claude Code and Codex are in .claude-plugin/ and .codex-plugin/.
 set -euo pipefail
 
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/skills/award-polish"
@@ -22,7 +22,7 @@ case "${1:-auto}" in
 esac
 
 if [ ${#TARGETS[@]} -eq 0 ]; then
-  echo "Neither ~/.claude nor ~/.codex found. Pass the folder your agent loads skills from: bash install.sh /path/to/skills"
+  echo "Neither ~/.claude nor ~/.codex found. Pass the skills folder to use: bash install.sh /path/to/skills"
   exit 1
 fi
 
@@ -43,4 +43,4 @@ for DST in "${TARGETS[@]}"; do
 done
 
 echo
-echo "Ask your agent to \"polish this site to award level\" or \"use the award-polish skill\"; agents with slash commands also take /award-polish."
+echo "Ask Claude Code or Codex to \"polish this site to award level\" or \"use the award-polish skill\". Slash commands take /award-polish."

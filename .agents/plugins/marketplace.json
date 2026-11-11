@@ -1,0 +1,28 @@
+{
+  "name": "award-polish",
+  "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar.",
+  "interface": {
+    "displayName": "award-polish"
+  },
+  "plugins": [
+    {
+      "name": "award-polish",
+      "description": "Polish websites, web apps and app interfaces with Awwwards winners as the bar, and check the result in headless Chromium.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Ekko237/award-polish.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design",
+      "defaultPrompt": [
+        "Polish this site to award level.",
+        "Redesign this page and keep the search fields.",
+        "Build a landing page to award level."
+      ]
+    }
+  ]
+}

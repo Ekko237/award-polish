@@ -1,8 +1,12 @@
 # award-polish
 
+[![License: MIT](https://img.shields.io/github/license/Ekko237/award-polish)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/Ekko237/award-polish)](https://github.com/Ekko237/award-polish/releases/latest)
+[![Changelog](https://img.shields.io/badge/changelog-read-blue)](CHANGELOG.md)
+
 **一个打磨网站、网页应用和 App 界面的 agent 技能：拿 Awwwards 获奖站当标杆，评审分数靠得住。**
 
-技能本身就是 Markdown 文档加 Python 脚本，能读文件、能跑命令的编程 agent 都能用；Claude Code 和 Codex 可以直接当技能装。
+已在 Claude Code 和 Codex 上测过。文件夹就是普通的 Markdown 加 Python，其他能加载技能文件夹的 agent 也许能用，但还没测过。
 
 [English](README.md)
 
@@ -48,26 +52,47 @@ python3 skills/award-polish/scripts/layout_check.py https://你的网站 --out c
 
 ## 安装
 
-**Claude Code（插件）**：
-
-```
-/plugin install award-polish --marketplace Ekko237/award-polish
+```bash
+git clone https://github.com/Ekko237/award-polish && cd award-polish && bash install.sh
 ```
 
-旧版本先 `/plugin marketplace add Ekko237/award-polish`，再 `/plugin install award-polish@award-polish`。
+需要 Python 3、Playwright 的 Chromium 和 Pillow。安装脚本要用 rsync。`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计技能（比如 design-taste-frontend），以及一个生图工具。
 
-**任何 agent（普通技能文件夹）**：
+已有 `~/.claude` 或 `~/.codex` 时，技能会装进对应的 `skills/award-polish`。两个都有就都装。两个都没有时，脚本会停下，并要求你给出技能目录。这个路径写在下面的折叠说明里。
+
+验证：说「把这个网站打磨到获奖水平」。你应该看到一段短回复，以及 `ITERATION_LOG.md`，第一行写明模式（新站或改版）。
+
+更新：在这份仓库里先 `git pull`，再运行 `bash install.sh`。复制时会保留你在已安装文件夹里自己加的文件。
+
+技能正文是英文。回复仍用你的语言。
+
+<details>
+<summary>其他安装方式</summary>
+
+已经有一份仓库时：
 
 ```bash
-bash install.sh                   # 自动装到已有的 ~/.claude/skills 和/或 ~/.codex/skills
-bash install.sh claude            # 只装 Claude Code
-bash install.sh codex             # 只装 Codex
-bash install.sh /你的/skills/目录   # 别的 agent：装到它读取技能的那个文件夹
+bash install.sh
 ```
 
-Windows 可以手动把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\skills\award-polish` 或 `%USERPROFILE%\.codex\skills\award-polish`。Git Bash 安装了 `rsync` 后也能运行 `install.sh`。
+只装 Claude Code，或只装 Codex：
 
-没有技能文件夹的 agent，直接让它读 `skills/award-polish/SKILL.md` 就行。装好后，说「把这个网站打磨到获奖水平」或者「用 award-polish 技能」；支持斜杠命令的 agent 也可以用 `/award-polish`。技能正文是英文写的，AI 跟你说话照样用你的语言。
+```bash
+bash install.sh claude
+bash install.sh codex
+```
+
+装到指定目录：
+
+```bash
+bash install.sh /你的/skills/目录
+```
+
+Windows 可以把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\skills\award-polish` 或 `%USERPROFILE%\.codex\skills\award-polish`。装了 `rsync` 的 Git Bash 可以直接运行 `install.sh`。
+
+也可以让 Claude Code 或 Codex 直接读 `skills/award-polish/SKILL.md`。斜杠命令是 `/award-polish`。
+
+</details>
 
 ## 里面有什么
 
@@ -87,10 +112,30 @@ Windows 可以手动把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\s
   - `split_commits.py`：工作区攒了几件改动时，按关键词拆成一件一个提交。
 - `skills/award-polish/templates/`：任务说明、迭代日志、评审提示词和评审配置。
 
-## 需要什么
+## 常见问题
 
-Python 3、Playwright 和 Chromium、Pillow；`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计规则技能（比如 design-taste-frontend），以及一个生图工具，画面优先用生成图。
+**一定要拿过 Awwwards 奖吗？**
+
+Awwwards 是这个循环对照的标杆。上面这些作品还没有一个拿过 Awwwards 奖。
+
+**检查器用的是哪个浏览器？**
+
+Playwright 的无头 Chromium。布局、动效、音量、前后对比和上线等待这些脚本都启动这个 Chromium。
+
+**会改我的 SEO 吗？**
+
+改版时会保住站上已有的搜索字段：标题、描述、规范链接、hreflang、结构化数据、H1 和分享卡片。`seo_keep.py` 对比线上和本地新版本，有差异就不放行。评审建议改 H1、标题或描述时，除非你同意，否则不改。
+
+**在哪些 agent 上测过？**
+
+Claude Code 和 Codex。其他能加载技能文件夹的 agent 也许能用，还没测过。
+
+**不装技能，能先试一下吗？**
+
+可以。克隆仓库后直接跑布局体检。见[一分钟试一个工具](#一分钟试一个工具)。
 
 ## 许可
 
 MIT
+
+用过了？开一个 issue，告诉我哪里坏了，或者你做出了什么。
