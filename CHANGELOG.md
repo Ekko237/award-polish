@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4 - 2026-11-15
+
+Security scan fixes. The polish loop is unchanged.
+
+- A display-only change on a reviewed source goes through that project's review, or an explicit user yes recorded for that one change. The redesign no longer describes a separate table that leaves the reviewed source untouched.
+- The skill text no longer names the live site's sitemap as if it were a file in this skill.
+
 ## 1.0.3 - 2026-11-15
 
 Security scan fixes. The polish loop is unchanged.
