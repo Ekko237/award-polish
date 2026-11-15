@@ -1,5 +1,6 @@
 import argparse
 import json
+import sys
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -70,6 +71,38 @@ def sitemap_paths(session, url, count):
     return paths[:count]
 
 
+def baseline_path(value):
+    """Return the --dump file, which must stay inside the repo or the working directory.
+
+    The path is relative. Absolute paths and ``..`` segments are refused, including
+    after resolving the working directory. When this command is run inside a git
+    checkout, a path inside that checkout is also accepted.
+    """
+    if not isinstance(value, str) or not value.strip() or "\0" in value or "\n" in value or "\r" in value:
+        sys.exit("--dump must be a plain relative path inside the repo or the working directory")
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts:
+        sys.exit("--dump must be a plain relative path inside the repo or the working directory; absolute paths and .. are refused")
+    cwd = Path.cwd().resolve()
+    target = (cwd / path).resolve()
+    roots = [cwd]
+    for candidate in (cwd, *cwd.parents):
+        if (candidate / ".git").exists():
+            roots.append(candidate.resolve())
+            break
+    if not any(_inside(target, root) for root in roots):
+        sys.exit("--dump must stay inside the repo or the working directory")
+    return target
+
+
+def _inside(path, root):
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return False
+    return True
+
+
 def main():
     ap = argparse.ArgumentParser(description='Compare SEO fields of the live and new pages plus given files; any difference exits with code 1.')
     ap.add_argument('--base', required=True)
@@ -77,12 +110,13 @@ def main():
     ap.add_argument('--pages', nargs='+', default=[])
     ap.add_argument('--sitemap', type=int)
     ap.add_argument('--files', nargs='+', default=[])
-    ap.add_argument('--dump', help='save the raw fields of every base page to this JSON file as the search baseline for the log')
+    ap.add_argument('--dump', help='relative path inside the repo or working directory for the search-baseline JSON; absolute paths and .. are refused')
     a = ap.parse_args()
     if not a.pages and not a.sitemap:
         ap.error('give --pages and/or a positive --sitemap')
     if a.sitemap is not None and a.sitemap <= 0:
         ap.error('--sitemap needs a positive integer')
+    dump_to = baseline_path(a.dump) if a.dump else None
     differences = 0
     baseline = {}
     with requests.Session() as session:
@@ -106,8 +140,8 @@ def main():
             print(f"{'DIFF' if changed else 'OK'} file {path}")
             if changed:
                 print(f'  bytes: base={before.content!r} new={after.content!r}')
-    if a.dump:
-        Path(a.dump).write_text(json.dumps(baseline, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    if dump_to is not None:
+        dump_to.write_text(json.dumps(baseline, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         for path, fields in baseline.items():
             print(f'baseline {path}: ' + '; '.join(f'{k}={json.dumps(v, ensure_ascii=False)}' for k, v in fields.items()))
         print(f'Search baseline saved: {a.dump}')
