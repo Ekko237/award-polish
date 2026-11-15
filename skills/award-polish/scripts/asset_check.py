@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 # Are all local assets present: every same-site file referenced by each HTML file in the site directory (img/source src and srcset, link href, script src,
 # inline style url()) and every url() in each CSS file must exist on disk. Lists anything missing and exits with code 1.
+# The path parser only drops the query and fragment of a local reference. This script does not open a connection.
 # layout_check.py only covers pages it opened; this one needs no browser and checks the whole site in seconds. Run it for snapshots and before release.
 # Usage: python3 asset_check.py <site dir> [--skip subdir ...]
 ap = argparse.ArgumentParser()
