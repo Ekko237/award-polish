@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -14,6 +15,7 @@ from pathlib import Path
 # only: after staging this item, every added or removed line must contain this string (e.g. an asset fingerprint); anything else mixed in refuses the commit.
 # ctx: context lines per file (default 3). Use 1 when changes are only a line or two apart and 3 lines would merge them into one hunk; never 0:
 # when only part of a zero-context diff is staged, git apply places later hunks at stale line numbers.
+# Commands are a list of arguments with shell=False. Paths from the split file must stay inside the repo and must not look like options.
 # Usage: python3 split_commits.py <repo> <split.json> plan          list hunks with unclear owners (none, or two items)
 #       python3 split_commits.py <repo> <split.json> run [--dry] [--items a,b]   runs plan first and commits item by item only when everything is clear
 ap = argparse.ArgumentParser()
@@ -24,16 +26,105 @@ ap.add_argument("--dry", action="store_true", help="stage, print and unstage eac
 ap.add_argument("--sign", default="", help="text appended to every commit message, e.g. a Co-Authored-By line")
 ap.add_argument("--items", help="commit only these items (comma-separated names), to continue after fixing the split halfway")
 args = ap.parse_args()
-ROOT = Path(args.repo).resolve()
-spec = json.loads(Path(args.spec).read_text())
-CTX = {k: str(v) for k, v in spec.get("ctx", {}).items()}
-if "0" in CTX.values():
-    sys.exit("ctx must not be 0")
-ITEMS = spec["items"]
+
+
+def plain(value, label):
+    if not isinstance(value, str) or "\0" in value:
+        sys.exit(f"{label} must be plain text")
+    return value
+
+
+def rel_path(value, label):
+    plain(value, label)
+    if not value or value.startswith("-") or "\n" in value or "\r" in value:
+        sys.exit(f"{label} must be a relative path")
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts:
+        sys.exit(f"{label} must stay inside the repo: {value}")
+    return value
+
+
+def item_name(value):
+    plain(value, "item name")
+    if not value or value != value.strip() or "\n" in value or "," in value or "/" in value or value.startswith("-"):
+        sys.exit(f"item name is not usable: {value!r}")
+    return value
+
+
+ROOT = Path(os.path.abspath(args.repo))
+if not ROOT.is_dir():
+    sys.exit(f"repo is not a directory: {ROOT}")
+spec_path = Path(args.spec)
+if not spec_path.is_file():
+    sys.exit(f"split file is not a file: {spec_path}")
+plain(args.sign, "sign text")
+try:
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+except json.JSONDecodeError as err:
+    sys.exit(f"split file is not valid JSON: {err}")
+if not isinstance(spec, dict):
+    sys.exit("split file must be a JSON object")
+ctx_in = spec.get("ctx", {})
+if not isinstance(ctx_in, dict):
+    sys.exit("ctx must be an object")
+CTX = {}
+for key, value in ctx_in.items():
+    rel_path(key, "ctx path")
+    if isinstance(value, str) and value.isdigit():
+        value = int(value)
+    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 99:
+        sys.exit("ctx must be a whole number from 1 to 99")
+    CTX[key] = str(value)
+items_in = spec.get("items")
+if not isinstance(items_in, list) or not items_in:
+    sys.exit("items must be a non-empty list")
+ITEMS = []
+seen = set()
+for it in items_in:
+    if not isinstance(it, dict):
+        sys.exit("each item must be an object")
+    name = item_name(it.get("name", ""))
+    if name in seen:
+        sys.exit(f"duplicate item name: {name}")
+    seen.add(name)
+    msg = plain(it.get("msg", ""), "commit message")
+    if not msg.strip():
+        sys.exit(f"{name}: commit message is empty")
+    hunks = it.get("hunks", {})
+    if not isinstance(hunks, dict):
+        sys.exit(f"{name}: hunks must be an object")
+    clean_hunks = {}
+    for pat, keywords in hunks.items():
+        rel_path(pat, f"{name} hunk path")
+        if not isinstance(keywords, list) or not keywords:
+            sys.exit(f"{name}: keywords for {pat} must be a non-empty list")
+        clean = []
+        for keyword in keywords:
+            plain(keyword, f"{name} keyword")
+            if not keyword:
+                sys.exit(f"{name}: keyword for {pat} is empty")
+            clean.append(keyword)
+        clean_hunks[pat] = clean
+    files = it.get("files", [])
+    if not isinstance(files, list):
+        sys.exit(f"{name}: files must be a list")
+    clean_files = [rel_path(entry, f"{name} file") for entry in files]
+    if not clean_hunks and not clean_files:
+        sys.exit(f"{name}: needs hunks or files")
+    cleaned = {"name": name, "msg": msg, "hunks": clean_hunks, "files": clean_files}
+    if "only" in it:
+        only = plain(it["only"], f"{name} only")
+        if not only:
+            sys.exit(f"{name}: only must not be empty")
+        cleaned["only"] = only
+    ITEMS.append(cleaned)
 
 
 def git(*a, inp=None):
-    return subprocess.run(["git", *a], cwd=ROOT, check=True, text=True, capture_output=True, input=inp).stdout
+    argv = ["git", *a]
+    if any(not isinstance(item, str) or "\0" in item for item in argv):
+        sys.exit("refusing a git argument that is not plain text")
+    return subprocess.run(argv, cwd=ROOT, check=True, text=True, capture_output=True, input=inp, shell=False).stdout
 
 
 def names(*a):
@@ -123,6 +214,8 @@ if not plan():
     sys.exit(1)
 if args.action == "run":
     chosen = args.items.split(",") if args.items else [it["name"] for it in ITEMS]
+    if any(not part for part in chosen):
+        sys.exit("items list has an empty name")
     unknown = set(chosen) - {it["name"] for it in ITEMS}
     if unknown:
         sys.exit(f"These items are not in the split: {sorted(unknown)}")

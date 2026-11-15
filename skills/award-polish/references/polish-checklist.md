@@ -43,9 +43,10 @@ Screenshot with viewport emulation (headless browsers have a minimum window widt
 - **When removing something reviewers disliked, replace it with something equally substantial**: swap a murky background photo for plain black and the next review says "too dark, no atmosphere". When you remove a layer, fill it with something tied to the brand concept (large soft light following the theme color, the brand's dot texture).
 - Icons and illustrations share one style.
 - **Prefer generated images**: map bases, illustrations, scenes, decoration, backgrounds, empty states and badges all come from an image generator first, not SVG, CSS shapes or line drawings, which look flat by comparison. SVG or CSS is only for two things: what sits on top of images and moves or follows data (route animations, highlights, progress), and small action icons. Animated pictures are "generated image underneath + SVG animation on top". Before every batch, list every picture that is still drawn, and put them all on the list.
+- **Third-party image generators**: reference sketches and prompts leave this machine and are sent to that service. Get the user's authorization before the first send. Do not send secrets or personal data. Do not switch providers silently; stay with the generator the user authorized.
 - **Routes, markers and labels on images: fix the layout before generating**: in a generated image, roads and buildings land anywhere; generate first and guess later, and overlays will never line up. Do it this way:
   1. Sketch the layout with simple lines and boxes: road network, key places, routes.
-  2. Feed the sketch to the image generator as a reference, keeping positions and only changing it to an illustrated or photographic look.
+  2. Feed the sketch to the image generator as a reference, keeping positions and only changing it to an illustrated or photographic look. Only send it after the user has authorized that generator, as in "Third-party image generators" above.
   3. After generating, place overlays by code: detect the road surface (or other carrying area) by color, run routes along real roads, put markers on routes and labels next to their places. Position overlays from layout sizes (offsetLeft, offsetTop, clientWidth and the like), not getBoundingClientRect, which includes transforms, so annotations drift while images slide in or scale on hover. Measure only after images load and entrance animations end.
   4. Accept by the numbers, every item with a value (checking only "on the road" is not enough; one clickable prototype failed exactly there):
      - At least 95% of route sample points on the road surface.
@@ -65,7 +66,7 @@ Screenshot with viewport emulation (headless browsers have a minimum window widt
 - **Icons that carry meaning are pictures too**: rule categories, statuses (pending, done, complaint, privacy), badges, urgent markers, empty states, bottom navigation and celebrations are generated as a set (one style, one size, transparent background) matching existing generated icons. Only **action symbols** keep an SVG icon library: back, close, check, dropdown, plus/minus, stars, arrows, search, refresh.
 - **Exception for dense interfaces like back offices and tables**: status tags (passed, failed, needs fix) and small table icons use text with colored pills or an icon library, not bitmaps, for clarity at small sizes. Generated images are for illustrations, empty states and large pictures.
 - **How to take stock**: before every batch, search the code for `<svg`, icon library imports (e.g. `@phosphor-icons/react`), CSS gradients and drawn decorations; decide for each whether it is "action symbol / animated overlay" or "picture", and put every picture on this batch's list.
-- Image order: try the image generators first (try every one you have; quotas come and go); when none works, use ChatGPT, Gemini or Grok in a browser (image replacement rules in SKILL.md red lines).
+- Image order: use the image generator the user authorized. When it is out of quota, ask before using another generator (ChatGPT, Gemini, or Grok in a browser). Do not switch providers silently. Image replacement rules are in the SKILL.md red lines.
 - Tabular numerals for numbers, so amounts and scores line up.
 
 ## Smooth
@@ -104,11 +105,11 @@ Finishing details jurors and users notice, pass/fail only:
 
 ## Performance and accessibility (pass/fail; every 3 batches, when images, fonts or loading change, and before every release)
 
-Test on a local production build (dev mode numbers do not count), phones on a throttled network. Run Lighthouse from the command line and save the JSON for the log:
+Test on a local production build (dev mode numbers do not count), phones on a throttled network. Run this pinned Lighthouse from the command line and save the JSON for the log. Do not drop the version.
 
 ```
-npx lighthouse <url> --only-categories=performance,accessibility --output=json --output-path=lh-mobile.json --chrome-flags="--headless"
-npx lighthouse <url> --preset=desktop --only-categories=performance,accessibility --output=json --output-path=lh-desktop.json --chrome-flags="--headless"
+npx lighthouse@13.6.0 SITE_URL --only-categories=performance,accessibility --output=json --output-path=lh-mobile.json --chrome-flags="--headless"
+npx lighthouse@13.6.0 SITE_URL --preset=desktop --only-categories=performance,accessibility --output=json --output-path=lh-desktop.json --chrome-flags="--headless"
 ```
 
 - **Lighthouse**: performance at least 90 on desktop and 80 on mobile; accessibility at least 90. When below-the-fold styles load late, online speed tools sometimes check accessibility before the styles arrive and the same version scores differently: test each page 3 times and only count issues reported every time.
