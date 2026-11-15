@@ -1,6 +1,7 @@
 ---
 name: award-polish
-description: 'Use when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar", or when a timed take-home, portfolio, landing page or hackathon project needs finishing. Covers a new site and a redesign of anything that runs in a browser.'
+description: 'Use for a website, web app, landing page, prototype, or other browser UI when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar", or when a timed take-home, portfolio, or hackathon web project needs finishing. Includes an optional helper to split polish changes into reviewable commits. Not for prose, documents, or non-web work.'
+allowed-tools: Read Write Edit Grep Glob Bash Agent
 ---
 
 # award-polish: polish an interface toward award level
@@ -11,16 +12,18 @@ Given the same brief, everyone ships about the same features; the gap comes from
 
 ## When to use
 
-Use this skill when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar". Also use it when a timed take-home, portfolio, landing page or hackathon project needs finishing.
+Use this skill for a website, web app, landing page, prototype, or other browser UI when the request says "build a website / landing page / web app / prototype / app interface to award level", "polish", "redesign", "stand out through visuals / interaction / motion", "everyone has the same features, how do we do better", "keep improving until nothing is left", or "use Awwwards as the bar". Also use it when a timed take-home, portfolio, or hackathon web project needs finishing. Do not use it for prose, documents, or non-web work.
 
-It covers a new site and a redesign of anything that runs in a browser: websites, web apps, prototypes, and tablet or phone app interfaces. The sections below are the workflow: study award sites of the same kind, polish on localhost in batches of goal, process, check and iterate, score each batch on 10 items with two reviewers who did not build it, on one shared ruler, with a blind side-by-side against the best version so far. Before/after images go to the user on the schedule in User checkpoints. Ship only when it is good, and deploy first only when a reachable link is required up front. Finish, stuck, and deadline stops are in When to stop.
+It covers a new site and a redesign of anything that runs in a browser: websites, web apps, prototypes, and tablet or phone app interfaces. The sections below are the workflow: study award sites of the same kind, polish on localhost in batches of goal, process, check and iterate, score each batch on 10 items with two reviewers who did not build it, on one shared ruler, with a blind side-by-side against the best version so far. Before/after images go to the user on the schedule in User checkpoints. Ship only when it is good. Deploy first only when a reachable link is required up front and the user has explicitly confirmed that deploy. Finish, stuck, and deadline stops are in When to stop.
 
-## Pick a mode (decide yourself, do not ask the user)
+## Pick a mode (decide from the project)
+
+Decide the mode from the project and write it on the first line of the log. Choosing a mode is a design decision and stays autonomous. Destructive, irreversible, deploy, and publish actions need an explicit yes from the user before they happen.
 
 | Situation | Mode |
 |---|---|
 | No site yet, or the request says "build", "from scratch", "new site" | **1 New site** → `references/mode-new.md` |
-| A site or repo that already opens, and the request says "polish", "redesign", "improve", "stand out" | **2 Redesign** → `references/mode-redesign.md` |
+| A website, web app, or other browser UI that already opens, and the request says "polish", "redesign", "improve", "stand out" | **2 Redesign** → `references/mode-redesign.md` |
 
 When unsure, look at the part you own: if it already has a page that opens, mode 2; if it is empty, mode 1 (a team repo exists but your part starts from zero: mode 1). Write the mode on the first line of the log. For hackathons, team work or owning one part, pick the mode as usual and also read `references/hackathon-team.md`; where they conflict, it wins.
 
@@ -42,7 +45,7 @@ Look in the conversation and project files (README, ITERATION_LOG.md); where not
 - **Subagents**: reviews, blind tests and small reviews all use your own fresh subagents, a new one each time (if your agent has no subagents, use a separate new agent session for each). Their prompts say to use only a headless Playwright browser, and if it will not start, stop and return the error text; never switch to the user's own browser, desktop control, or install a browser. Check what comes back before counting it. **When the user stops subagents**, the main session scores reviews itself following `references/reviewer.md`, the log says "scored by the main session, not an independent review", and the independent-review finish condition becomes the user approving side-by-side images.
 - **Machine**: check memory first (macOS `sysctl -n hw.memsize`, Linux `free -g`). At 8GB or less run one browser job at a time (screenshots, checks, reviews, Lighthouse in sequence, one reviewer at a time).
 - **Where the scripts are**: bundled scripts live in `<skill dir>/scripts`. `<skill dir>` is where this skill is installed (for example ~/.claude/skills/award-polish, ~/.codex/skills/award-polish, a plugin's copy, or wherever your agent keeps skills).
-- **When the user does not want questions, only results**: make the choices yourself and write them in the log and report; send side-by-side images without waiting. Direction-level redesigns (new key visual, type system, color system, site concept) need the user to pick from images; if the user does not look at images, only push the baseline look further.
+- **When the user does not want questions, only results**: make the design choices yourself and write them in the log and report; send side-by-side images without waiting. A destructive, irreversible, deploy, or publish action still needs an explicit yes. Direction-level redesigns (new key visual, type system, color system, site concept) need the user to pick from images; if the user does not look at images, only push the baseline look further.
 
 ## Study award-winning sites as the bar (once, keep the notes)
 
@@ -54,7 +57,7 @@ Details in `references/polish-checklist.md`:
 
 - **Easy to use**: few steps, every page shows at a glance what to do, errors say how to fix them.
 - **Copy**: headings, buttons, hints and empty states are design; run a de-AI rewrite pass (e.g. humanizer) when done.
-- **Good-looking**: consistent type, whitespace, hierarchy and color, one spacing scale. Pictures (photos, illustrations, scenes, icons that carry meaning) come from an image generator first; anything animated is SVG layered over a generated image; only action symbols like back and close use an icon library. Colors match the site, avoid portraits that look AI-made, diagrams (maps, flows) must read at a glance.
+- **Good-looking**: consistent type, whitespace, hierarchy and color, one spacing scale. Pictures (photos, illustrations, scenes, icons that carry meaning) come from an image generator the user has authorized first; anything animated is SVG layered over a generated image; only action symbols like back and close use an icon library. The checklist says what may be sent to a generator. Colors match the site, avoid portraits that look AI-made, diagrams (maps, flows) must read at a glance.
 - **Smooth**: no white flash or jump between pages, instant feedback on press, skeletons, touch that follows the finger; short motion that never blocks, respecting reduced-motion.
 - **Worth coming back**: progress, growth, small achievements, recaps, shortcuts, done sincerely, no click bait.
 - **Signature moments**: pick the key beats of the core flow (first screen, core action done, result reveal, value change, transitions) and polish them until they feel solid, satisfying and worth clicking again.
@@ -91,7 +94,7 @@ At kickoff copy `templates/POLISH_BRIEF.md` into an uncommitted brief and fill t
 
 **Score stuck**: three reviews in a row in the same band means a direction review (`reviewer.md`, "Direction review"), with directions that avoid the rejected looks. Before merging a direction-level redesign, show the user three columns side by side (before, baseline, new direction; home and key pages; 1440 and 375) and merge and ship only what the user picks (on a content site, a new direction scored 80 by reviewers looked ugly to the people who saw it, and the 74-point batch 4 went back live). If the user does not look at images, skip direction-level redesigns: let a small review pick the cheapest-looking screen, redo it within the baseline look, and compare side by side. Merging is not finishing; the loop continues.
 
-**Shipping**: by default everything stays local until it is good; pushing to an auto-deploying branch is shipping, and needs the user's go-ahead. Deploy-first, staged updates, deploy sources, assembling the best version and post-release checks are in `references/release.md`.
+**Shipping**: by default everything stays local until it is good. Pushing a branch that publishes the site is a deploy, and it needs an explicit yes from the user before the push. Deploy-first, staged updates, deploy sources, assembling the best version and post-release checks are in `references/release.md`.
 
 ### 3. How to check
 
@@ -137,7 +140,7 @@ In the log:
 
 Then say "done", with the link and 3 highlights. "Feels done" and "the redesign won the A/B" do not count; check each condition before stopping and write the result in the log.
 
-**Stop early and report**: hard deadline (push before it and stop once the live check passes, leaving a fix-only stretch before the deadline); the user says stop (wrap up to a working live state, record where you stopped); the live site is broken and rolling back does not save it.
+**Stop early and report**: hard deadline (after the user explicitly confirms the push, push before it and stop once the live check passes, leaving a fix-only stretch before the deadline); the user says stop (wrap up to a working live state, record where you stopped); the live site is broken and rolling back does not save it.
 
 **Change approach and keep going** (unless the brief says to ask when stuck):
 - Same problem unsolved for 3 batches: revert to the last working version, note it, park it, work on something else.
@@ -148,8 +151,8 @@ Then say "done", with the link and 3 highlights. "Feels done" and "the redesign 
 
 ## Red lines
 
-- A live link that has been handed out must always open: the build must pass before shipping; if it breaks, push the last good version back first, then fix.
-- Pushing to an auto-deploying branch is shipping; no push without the user's go-ahead.
+- A live link that has been handed out must always open: the build must pass before shipping; if it breaks, get an explicit yes and push the last good version back first, then fix.
+- Pushing a branch that publishes the site is a deploy. Do not push, deploy, or publish without an explicit yes from the user.
 - Revert code only by editing it back as a new commit on top; never git revert, reset, checking out earlier commits or restore to rewrite history or overwrite whole files.
 - Do not change a delivered domain, repo name or hosting platform, and do not make a public repo private.
 - No outside services, analytics or ads the user did not ask for.

@@ -6,7 +6,9 @@ Time is counted in hours (say 36), several people write in one repo, I own one p
 
 **Mode**: the team repo exists at the start, but my part starts from zero, so mode 1.
 
-## Find out five things first (from team docs, without asking the user)
+## Find out five things first (from team docs)
+
+Read these from the team docs and write them in the log. This is design setup, so it does not need a question. Do not deploy, publish, delete, or take another destructive or irreversible action without an explicit yes from the user.
 
 - **Which folders are mine**: change only those; others' folders are read-only. Shared contracts (data formats, APIs) are read-only; to change one, stop and tell the user, who raises it in the team chat.
 - **The team's schedule and feature-cut line**: polishing batches follow the team's checkpoints (e.g. 16:00, 20:00, Sunday 07:30).
@@ -27,7 +29,7 @@ Ask the organizers first what may be prepared before the start. Usually code is 
 - Study references (`reference-study.md`) and write the reference notes and design read.
 - Settle the design system: colors, fonts, type scale, layout grid, spacing scale, radius, shadows, motion durations, plus product name, logo and favicon, on one page.
 - One design mockup per demo screen, marking how signature moments move. If the rules allow, mockups may be static web pages, rewritten after the start rather than copied into the repo; if not, image mockups only.
-- Generate image assets with an image generator: illustrations, empty states, share cards and other large pictures made and picked ahead (if the generators are out of quota, use ChatGPT, Gemini or Grok in a browser). After the start only fill gaps; no wholesale replacement.
+- Generate image assets with an image generator the user has authorized: illustrations, empty states, share cards and other large pictures made and picked ahead. Reference sketches and prompts leave the machine. If that generator is out of quota, ask before using another (ChatGPT, Gemini, or Grok in a browser). Do not switch providers silently. After the start only fill gaps; no wholesale replacement.
 - One small reviewer critiques the mockups, then the user sees them; **settled only on the user's go-ahead**. Direction changes (a new visual direction) happen only at this step; no direction reviews after the start.
 - Anchor set: the version at the first checkpoint after the start becomes the anchor set (see reviewer.md "New projects without an older version") and never changes.
 
