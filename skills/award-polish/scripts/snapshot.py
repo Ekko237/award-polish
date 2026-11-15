@@ -3,10 +3,11 @@ import os
 import re
 import shutil
 import stat
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+from _proc import run_git, run_tool
 
 # Frozen snapshot for reviewers: export from a commit only (git archive) and refuse when the site directory has uncommitted or untracked files,
 # so files that exist in the working tree but not in the commit do not turn into 404s; then run asset_check.py over the whole site.
@@ -31,66 +32,33 @@ ap.add_argument("--skip", action="append", default=[], help="subdirectory asset_
 args = ap.parse_args()
 
 
-def _plain_argv(argv):
-    if not isinstance(argv, list) or not argv:
-        sys.exit("refusing a command that is not a fixed argument list")
-    if any(not isinstance(item, str) or "\0" in item for item in argv):
-        sys.exit("refusing a command argument that is not plain text")
-
-
 def git_toplevel():
-    # Fixed argv. shell is off, so this cannot be turned into another command.
-    _plain_argv(["git", "rev-parse", "--show-toplevel"])
-    return subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        shell=False,
-        cwd=repo,
-        check=True,
-        text=True,
-        capture_output=True,
-    ).stdout
+    return run_git(["rev-parse", "--show-toplevel"], cwd=repo).stdout
 
 
 def git_status_site(site_path):
     site_path = rel_arg(site_path, "site dir")
-    # Fixed argv: git status --porcelain --untracked-files=all -- <site>.
-    # shell is off. site_path was checked by rel_arg (relative, no "..", not an option).
-    return subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", site_path],
-        shell=False,
+    return run_git(
+        ["status", "--porcelain", "--untracked-files=all", "--", site_path],
         cwd=repo,
-        check=True,
-        text=True,
-        capture_output=True,
     ).stdout
 
 
 def git_short_ref(ref):
     if not isinstance(ref, str) or not REF_RE.fullmatch(ref):
         sys.exit(f"ref is not a plain commit or branch name: {ref}")
-    # Fixed argv: git rev-parse --short <ref>. shell is off. ref matched REF_RE,
-    # so it cannot start a new option.
-    return subprocess.run(
-        ["git", "rev-parse", "--short", ref],
-        shell=False,
-        cwd=repo,
-        check=True,
-        text=True,
-        capture_output=True,
-    ).stdout
+    return run_git(["rev-parse", "--short", ref], cwd=repo).stdout
 
 
 def git_archive(ref, site_path):
     if not isinstance(ref, str) or not REF_RE.fullmatch(ref):
         sys.exit(f"ref is not a plain commit or branch name: {ref}")
     site_path = rel_arg(site_path, "site dir")
-    # Fixed argv: git archive <ref> -- <site>. shell is off. Both values were
-    # checked above, and "--" keeps the site path from being read as an option.
-    return subprocess.run(
-        ["git", "archive", ref, "--", site_path],
-        shell=False,
+    # text stays off so the archive bytes are not decoded.
+    return run_git(
+        ["archive", ref, "--", site_path],
         cwd=repo,
-        check=True,
+        text=False,
         capture_output=True,
     ).stdout
 
@@ -104,14 +72,7 @@ def extract_archive(dest, archive):
     dest_text = os.fspath(dest)
     if "\0" in dest_text:
         sys.exit("refusing an archive destination that is not plain text")
-    # Fixed argv: tar -x -C <dest>. shell is off. dest is a real directory this
-    # process created. The archive is stdin, not a shell string.
-    return subprocess.run(
-        ["tar", "-x", "-C", dest_text],
-        shell=False,
-        input=bytes(archive),
-        check=True,
-    )
+    return run_tool("tar", ["-x", "-C", dest_text], stdin=bytes(archive))
 
 
 def run_asset_check(site_root, skips):
@@ -121,16 +82,12 @@ def run_asset_check(site_root, skips):
     root_text = os.fspath(site_root)
     if not isinstance(root_text, str) or "\0" in root_text:
         sys.exit("refusing an asset-check path that is not plain text")
-    argv = [sys.executable, os.fspath(script), root_text]
+    argv = [os.fspath(script), root_text]
     for skip in skips:
         argv.extend(["--skip", rel_arg(skip, "--skip")])
-    _plain_argv(argv)
-    if argv[0] != sys.executable or Path(argv[1]) != script:
+    if Path(argv[0]) != script:
         sys.exit("refusing an asset check that is not the bundled script")
-    # Fixed prefix: this interpreter and the bundled asset_check.py. The only
-    # added arguments are --skip plus a relative path checked by rel_arg.
-    # shell is off.
-    return subprocess.run(argv, shell=False, check=True)
+    return run_tool("python", argv)
 
 
 def lexical_abs(path):

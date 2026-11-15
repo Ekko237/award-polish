@@ -173,7 +173,9 @@ screenshotted and stitched with labels. URLs may include a subpath
 
 Compares title, description, canonical, hreflang, robots, structured data
 types, H1, lang, and share card fields page by page. Any difference exits
-with code 1. `--dump` saves the base fields as the search baseline.
+with code 1. `--dump` saves the base fields as the search baseline. The path is
+relative and must stay inside the repo or the working directory. Absolute
+paths and `..` are refused.
 
 ## Wait for release: wait_live.py
 

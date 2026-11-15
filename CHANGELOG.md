@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.3 - 2026-11-15
+
+Security scan fixes. The polish loop is unchanged.
+
+- `seo_keep.py --dump` writes only a relative path inside the repo or the working directory. Absolute paths and `..` are refused. The skill declares that file write (`Write`).
+- Git, tar, and the bundled asset check go through `scripts/_proc.py`. That module allowlists `git`, `tar`, and `python`, checks the arguments, and is the only `subprocess.run` call.
+
 ## 1.0.2 - 2026-11-15
 
 Security scan fixes. The polish loop is unchanged.
