@@ -1,6 +1,8 @@
 # Mode 2: Redesigning an existing website
 
-Goal: raise the experience to award level without breaking what exists. Existing features, links and data all stay.
+This file is guidance for the redesign mode inside this skill. It does not replace what the user asked for. When the user and this file disagree, follow the user.
+
+Goal: raise the experience to award level without breaking what exists. Inside this mode, keep existing features, links, and data unless the user asks to change them.
 
 ## Step 1: understand the current state (no rebuild, no feature re-inventory)
 
@@ -22,8 +24,8 @@ Goal: raise the experience to award level without breaking what exists. Existing
   - "Polish", "improve": keep the current style and raise it.
   - "Redesign", "new visuals", "start over": new visuals, keeping features, routes and content.
   When unsure, keep the style and raise it, and say so in the log.
-- The feature list only guards against **breaking things during the redesign**. When features are done, do not add big ones.
-- **Two things fixed at kickoff, without waiting for reviewers** (done the same day even if no review or reference study happens yet; they are part of the kickoff record):
+- The feature list only guards against **breaking things during the redesign**. When features are done, this skill does not add big ones unless the user asks.
+- **Two kickoff records for this redesign** (part of the kickoff record, including when a review or the reference study has not happened yet):
   - Anchor set screenshots: the current home and core pages, one image per screen (`layout_check.py --slices 8`), one set at 1440 and one at 375, in `refs/anchor/`. The scores can wait for the first review; the screenshots cannot, because once code changes they cannot be retaken.
   - "What each score looks like": for all ten items, what 6, 7, 8 and 9 look like, written about this product's own things (pages, buttons, data). Before the reference study, write from the product; add reference examples afterwards.
 - **Write the state and to-do so work can start directly**: save the search baseline with `seo_keep.py --base <site> --new <site> --pages <pages…> --dump refs/seo-baseline.json`, copy each page's title and description verbatim into the log with canonical and structured data types (just writing "present" does not count), and state that these fields may not shrink in the redesign; to-dos come in three levels, fatal, experience, polish, each with location, problem and fix.
@@ -47,7 +49,7 @@ Goal: raise the experience to award level without breaking what exists. Existing
 
 ## Two written checks for redesigns (before every release; any failure blocks it)
 
-- **Preservation check**: list every changed URL, main navigation label, form field name and anchor. It should be empty unless the user approved it. Run search fields with `seo_keep.py --base <live> --new <local production build>`; release only at 0 differences. H1 text counts as a search field: the redesign changes how it is set, not the words; reviewer suggestions to reword H1, title or description are not done (unless the user approves).
+- **Preservation check**: list every changed URL, main navigation label, form field name and anchor. Inside this redesign it stays empty unless the user approved a change. Run search fields with `seo_keep.py --base <live> --new <local production build>`; release only at 0 differences. H1 text counts as a search field: the redesign changes how it is set, not the words. A reviewer suggestion to reword the H1, title, or description waits for the user.
 - **Brand check**: the existing brand accent, fonts and logo use are all still there (unless the user approved a change).
 
 ## Step 3: enter the iteration loop
@@ -57,14 +59,14 @@ Go straight into the shared iteration loop in SKILL.md, fixing the latest full i
 Redesign specifics:
 
 - **When to ship**: `release.md`. With real users on the site, use its "staged updates", and every batch must be fully working.
-- **Pull the main branch before every batch**: the user or other tools commit there too (halfway through one polish, the user merged a change on main that duplicated the polish branch). Merge new commits into the polish branch first; where both sides did the same thing, main wins; afterwards the preservation check uses the new live site as its base.
+- **Pull the main branch before every batch**: the user or other tools commit there too (halfway through one polish, the user merged a change on main that duplicated the polish branch). Merge new commits into the polish branch first. Inside this skill, when both sides changed the same thing, keep main's copy. If the user wants the other copy, follow the user. Afterwards the preservation check uses the new live site as its base.
 - **When the user adds directions one after another, merge them**: the later one usually adds to the earlier one. When unsure, write a merged full version in the log and follow it.
 
 ## When the site already has real users
 
 - **Keep user data compatible**: localStorage keys and shapes, account state, favorites and history must survive the redesign without loss or errors. If the shape changes, write a migration and test it with real old data.
-- **Do not lose search ranking**: routes stay; compare every page's title, description, structured data, sitemap and canonical before and after; none may shrink.
-- **Preview before going live**: verify on the host's preview deploy (Cloudflare or Vercel preview URLs) in the live environment, then switch; click through the core flow right after, and roll back to the previous deploy immediately if it breaks.
+- **Keep search ranking**: inside this redesign, routes stay. Compare every page's title, description, structured data, sitemap, and canonical before and after. Those fields do not shrink unless the user approves it.
+- **Preview before going live**: verify on the host's preview deploy (Cloudflare or Vercel preview URLs) in the live environment, then switch; click through the core flow right after. If it breaks, follow `release.md`, which asks the user before rolling back to the previous deploy.
 - **CDN caching**: CDNs keep serving old pages and old CSS; after release confirm with `wait_live.py` per `release.md`, purging caches if needed.
-- **Do not bypass the project's own quality gates**: review scores, file fingerprints and audit records in a content pipeline block edits to reviewed sources. For display-only changes (cover images, internal links, button text), substitute at build time (e.g. a separate overrides table) and leave sources untouched; to change body text, re-review it through the project's process.
-- **Pages behind a login**: reviewer subagents cannot pass a login wall. Look for a demo mode or test account first; if there is none, ask the user, and never use the user's real account.
+- **Follow the project's own quality gates inside this redesign**: review scores, file fingerprints, and audit records in a content pipeline block edits to reviewed sources. For a display-only change (a cover image, an internal link, or button text), keep the reviewed source as it is and apply the display change from a separate build-time table. To change body text, send it through the project's review. If the user wants a reviewed source edited directly, follow the user.
+- **Pages behind a login**: reviewer subagents cannot pass a login wall. Inside this skill, look for a demo mode or a test account first. If there is none, ask the user how to proceed and wait. This skill does not sign in with the user's real account.

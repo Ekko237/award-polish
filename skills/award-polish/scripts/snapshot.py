@@ -31,14 +31,106 @@ ap.add_argument("--skip", action="append", default=[], help="subdirectory asset_
 args = ap.parse_args()
 
 
-def run(argv, **kwargs):
+def _plain_argv(argv):
+    if not isinstance(argv, list) or not argv:
+        sys.exit("refusing a command that is not a fixed argument list")
     if any(not isinstance(item, str) or "\0" in item for item in argv):
         sys.exit("refusing a command argument that is not plain text")
-    return subprocess.run(argv, shell=False, **kwargs)
 
 
-def git(*a):
-    return run(["git", *a], cwd=repo, check=True, text=True, capture_output=True).stdout
+def git_toplevel():
+    # Fixed argv. shell is off, so this cannot be turned into another command.
+    _plain_argv(["git", "rev-parse", "--show-toplevel"])
+    return subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        shell=False,
+        cwd=repo,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout
+
+
+def git_status_site(site_path):
+    site_path = rel_arg(site_path, "site dir")
+    # Fixed argv: git status --porcelain --untracked-files=all -- <site>.
+    # shell is off. site_path was checked by rel_arg (relative, no "..", not an option).
+    return subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=all", "--", site_path],
+        shell=False,
+        cwd=repo,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout
+
+
+def git_short_ref(ref):
+    if not isinstance(ref, str) or not REF_RE.fullmatch(ref):
+        sys.exit(f"ref is not a plain commit or branch name: {ref}")
+    # Fixed argv: git rev-parse --short <ref>. shell is off. ref matched REF_RE,
+    # so it cannot start a new option.
+    return subprocess.run(
+        ["git", "rev-parse", "--short", ref],
+        shell=False,
+        cwd=repo,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout
+
+
+def git_archive(ref, site_path):
+    if not isinstance(ref, str) or not REF_RE.fullmatch(ref):
+        sys.exit(f"ref is not a plain commit or branch name: {ref}")
+    site_path = rel_arg(site_path, "site dir")
+    # Fixed argv: git archive <ref> -- <site>. shell is off. Both values were
+    # checked above, and "--" keeps the site path from being read as an option.
+    return subprocess.run(
+        ["git", "archive", ref, "--", site_path],
+        shell=False,
+        cwd=repo,
+        check=True,
+        capture_output=True,
+    ).stdout
+
+
+def extract_archive(dest, archive):
+    if not isinstance(archive, (bytes, bytearray)):
+        sys.exit("refusing an archive that is not bytes")
+    dest = lexical_abs(dest)
+    if dest.is_symlink() or not dest.is_dir():
+        sys.exit(f"refusing to extract into {dest}")
+    dest_text = os.fspath(dest)
+    if "\0" in dest_text:
+        sys.exit("refusing an archive destination that is not plain text")
+    # Fixed argv: tar -x -C <dest>. shell is off. dest is a real directory this
+    # process created. The archive is stdin, not a shell string.
+    return subprocess.run(
+        ["tar", "-x", "-C", dest_text],
+        shell=False,
+        input=bytes(archive),
+        check=True,
+    )
+
+
+def run_asset_check(site_root, skips):
+    script = Path(__file__).with_name("asset_check.py")
+    if not script.is_file():
+        sys.exit(f"asset check script is missing: {script}")
+    root_text = os.fspath(site_root)
+    if not isinstance(root_text, str) or "\0" in root_text:
+        sys.exit("refusing an asset-check path that is not plain text")
+    argv = [sys.executable, os.fspath(script), root_text]
+    for skip in skips:
+        argv.extend(["--skip", rel_arg(skip, "--skip")])
+    _plain_argv(argv)
+    if argv[0] != sys.executable or Path(argv[1]) != script:
+        sys.exit("refusing an asset check that is not the bundled script")
+    # Fixed prefix: this interpreter and the bundled asset_check.py. The only
+    # added arguments are --skip plus a relative path checked by rel_arg.
+    # shell is off.
+    return subprocess.run(argv, shell=False, check=True)
 
 
 def lexical_abs(path):
@@ -168,7 +260,7 @@ for spec in args.link:
         sys.exit("--link target must be a plain path")
     links.append((inner, target))
 
-toplevel = Path(git("rev-parse", "--show-toplevel").strip())
+toplevel = Path(git_toplevel().strip())
 repo_paths = []
 for path in (repo_arg, toplevel):
     for variant in variants(path):
@@ -184,7 +276,7 @@ if out.exists():
         sys.exit(f"{out} exists and is not a directory")
     if not marker_ok(out):
         sys.exit(f"{out} is not a snapshot this tool created (missing {MARKER_NAME}); refusing to replace it")
-dirty = git("status", "--porcelain", "--untracked-files=all", "--", site).strip()
+dirty = git_status_site(site).strip()
 if dirty:
     sys.exit(f"{args.site} has uncommitted files; commit them before taking a snapshot:\n{dirty}")
 
@@ -193,8 +285,8 @@ tmp_id = tmp.lstat()
 published = False
 try:
     write_marker(tmp)
-    archive = run(["git", "archive", args.ref, "--", site], cwd=repo, check=True, capture_output=True).stdout
-    run(["tar", "-x", "-C", str(tmp)], input=archive, check=True)
+    archive = git_archive(args.ref, site)
+    extract_archive(tmp, archive)
     write_marker(tmp)
     site_root = tmp / site
     for inner, target in links:
@@ -216,10 +308,7 @@ try:
             sys.exit(f"--link path already exists in the snapshot: {inner}")
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.symlink_to(target_path)
-    check = [sys.executable, str(Path(__file__).with_name("asset_check.py")), str(site_root)]
-    for skip in args.skip:
-        check += ["--skip", skip]
-    run(check, check=True)
+    run_asset_check(site_root, args.skip)
     if out.exists():
         if not marker_ok(out):
             sys.exit(f"{out} changed and is no longer a snapshot this tool created; refusing to replace it")
@@ -251,4 +340,4 @@ finally:
             shutil.rmtree(tmp)
 
 final_site = out / site
-print(f"Snapshot {final_site} ready ({args.ref} = {git('rev-parse', '--short', args.ref).strip()})")
+print(f"Snapshot {final_site} ready ({args.ref} = {git_short_ref(args.ref).strip()})")

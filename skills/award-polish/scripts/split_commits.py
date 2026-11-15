@@ -120,16 +120,175 @@ for it in items_in:
     ITEMS.append(cleaned)
 
 
-def git(*a, inp=None):
-    argv = ["git", *a]
-    if any(not isinstance(item, str) or "\0" in item for item in argv):
-        sys.exit("refusing a git argument that is not plain text")
-    return subprocess.run(argv, cwd=ROOT, check=True, text=True, capture_output=True, input=inp, shell=False).stdout
+# Git is only started with shell=False and one of the fixed argv lists below.
+# shell is off, so a path or commit message is data for git, not a shell command.
+# The executable is the literal "git". Paths are checked by rel_path first
+# (relative, no "..", not an option). The apply patch is stdin, not an argument.
+# That is safe: nothing here is passed to a shell, and no argument can add a
+# subcommand or leave the repo.
 
 
-def names(*a):
-    # -z separates names with \0 so file names with spaces stay whole
-    return [n for n in git(*a, "-z").split("\0") if n]
+def git_changed_names():
+    # Safe: shell is off. This argv is the fixed list git diff --name-only -z.
+    # -z keeps file names with spaces whole. Nothing from the split file is included.
+    out = subprocess.run(
+        ["git", "diff", "--name-only", "-z"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+    return [n for n in out.split("\0") if n]
+
+
+def git_untracked_names():
+    # Safe: shell is off. This argv is the fixed list git ls-files --others --exclude-standard -z.
+    out = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+    return [n for n in out.split("\0") if n]
+
+
+def git_diff_path(path):
+    path = rel_path(path, "diff path")
+    context = CTX.get(path, "3")
+    if not re.fullmatch(r"[1-9][0-9]?", context):
+        sys.exit("diff context must be 1 to 99")
+    # Safe: shell is off. argv is the fixed form git diff -U<n> -- <path>.
+    # n is 1-99 and path was checked by rel_path, so it cannot be another git option.
+    return subprocess.run(
+        ["git", "diff", "-U" + context, "--", path],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_cached_names():
+    # Safe: shell is off. This argv is the fixed list git diff --cached --name-only.
+    return subprocess.run(
+        ["git", "diff", "--cached", "--name-only"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_apply_cached(patch):
+    if not isinstance(patch, str) or "\0" in patch:
+        sys.exit("refusing a patch that is not plain text")
+    # Safe: shell is off. argv is the fixed list git apply --cached -.
+    # The patch is stdin, not an argument.
+    return subprocess.run(
+        ["git", "apply", "--cached", "-"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        input=patch,
+        shell=False,
+    ).stdout
+
+
+def git_add(path):
+    path = rel_path(path, "git add path")
+    # Safe: shell is off. argv is the fixed form git add -- <path>.
+    # "--" keeps the path from being read as an option.
+    return subprocess.run(
+        ["git", "add", "--", path],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_cached_diff():
+    # Safe: shell is off. This argv is the fixed list git diff --cached.
+    return subprocess.run(
+        ["git", "diff", "--cached"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_reset_quiet():
+    # Safe: shell is off. This argv is the fixed list git reset -q.
+    # It unstages only. It does not move HEAD or delete files.
+    return subprocess.run(
+        ["git", "reset", "-q"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_cached_stat():
+    # Safe: shell is off. This argv is the fixed list git diff --cached --stat.
+    return subprocess.run(
+        ["git", "diff", "--cached", "--stat"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_commit(message):
+    plain(message, "commit message")
+    if not message.strip():
+        sys.exit("commit message is empty")
+    # Safe: shell is off. argv is the fixed form git commit -q -m <message>.
+    # -m takes the next item as the message, even if that text starts with "-".
+    return subprocess.run(
+        ["git", "commit", "-q", "-m", message],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_log_one():
+    # Safe: shell is off. This argv is the fixed list git log --oneline -1.
+    return subprocess.run(
+        ["git", "log", "--oneline", "-1"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
+
+
+def git_status():
+    # Safe: shell is off. This argv is the fixed list git status --porcelain.
+    return subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+        shell=False,
+    ).stdout
 
 
 def expand(pat):
@@ -137,7 +296,7 @@ def expand(pat):
 
 
 def split_hunks(path):
-    head, *hunks = re.split(r"(?m)^(?=@@ )", git("diff", f"-U{CTX.get(path, '3')}", "--", path))
+    head, *hunks = re.split(r"(?m)^(?=@@ )", git_diff_path(path))
     return head, hunks
 
 
@@ -165,7 +324,7 @@ def file_owner(path):
 def plan():
     km = keymap()
     bad = []
-    for path in names("diff", "--name-only"):
+    for path in git_changed_names():
         if path in km:
             for h in split_hunks(path)[1]:
                 o = owners(path, h, km) or file_owner(path)
@@ -173,7 +332,7 @@ def plan():
                     bad.append(f"{path} {h.splitlines()[0]} -> {o or 'no owner'}")
         elif len(file_owner(path)) != 1:
             bad.append(f"{path} (whole file) -> {file_owner(path) or 'no owner'}")
-    for path in names("ls-files", "--others", "--exclude-standard"):
+    for path in git_untracked_names():
         if len(file_owner(path)) != 1:
             bad.append(f"{path} (new file) -> {file_owner(path) or 'no owner'}")
     for b in bad:
@@ -183,31 +342,31 @@ def plan():
 
 
 def run_item(it):
-    if git("diff", "--cached", "--name-only").strip():
+    if git_cached_names().strip():
         sys.exit("The index is not empty; deal with it first")
     for pat, ks in it.get("hunks", {}).items():
         for path in expand(pat):
             head, hunks = split_hunks(path)
             picked = [h for h in hunks if any(k in ln for ln in changed(h) for k in ks)]
             if picked:
-                git("apply", "--cached", "-", inp=head + "".join(picked))
+                git_apply_cached(head + "".join(picked))
     for f in it.get("files", []):
-        git("add", "--", f)
-    staged = git("diff", "--cached")
+        git_add(f)
+    staged = git_cached_diff()
     if not staged.strip():
         sys.exit(f"{it['name']}: nothing was staged; keywords or paths are wrong")
     if "only" in it:
         stray = [ln for ln in changed(staged) if it["only"] not in ln]
         if stray:
-            git("reset", "-q")
+            git_reset_quiet()
             sys.exit(f"{it['name']}: the index holds changes that do not belong to this item:\n" + "\n".join(stray[:20]))
-    print(git("diff", "--cached", "--stat").rstrip())
+    print(git_cached_stat().rstrip())
     if args.dry:
-        git("reset", "-q")
+        git_reset_quiet()
         print(f"({it['name']} dry run, not committed)")
     else:
-        git("commit", "-q", "-m", it["msg"] + (f"\n\n{args.sign}" if args.sign else ""))
-        print(git("log", "--oneline", "-1").rstrip())
+        git_commit(it["msg"] + (f"\n\n{args.sign}" if args.sign else ""))
+        print(git_log_one().rstrip())
 
 
 if not plan():
@@ -222,5 +381,5 @@ if args.action == "run":
     for it in ITEMS:
         if it["name"] in chosen:
             run_item(it)
-    left = git("status", "--porcelain").strip()
+    left = git_status().strip()
     print("Working tree clean" if not left else "Changes left over:\n" + left)

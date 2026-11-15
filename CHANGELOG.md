@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 - 2026-11-15
+
+Security scan fixes. The polish loop is unchanged.
+
+- Network use is declared on the skill (`WebFetch` and `permissions: [network]`). `seo_keep.py` fetches the pages it is given to compare search fields. `wait_live.py` opens the live URL it is given, plus that page's stylesheets and scripts, to see when a release is being served. `asset_check.py` only parses local paths and does not open a connection.
+- The snapshot and commit-splitting scripts call git and tar with fixed argument lists, `shell` off, and checked inputs.
+- Redesign guidance stays inside this skill and defers to the user.
+- The skill frontmatter includes version, license, and homepage.
+
 ## 1.0.1 - 2026-11-15
 
 Security scan fixes. The polish loop is unchanged.
