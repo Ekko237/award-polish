@@ -178,3 +178,5 @@ Yes. Clone the repo and run the layout checker. See [Try one tool in a minute](#
 MIT
 
 <sub>Tried it? Open an issue and tell me what broke or what you made.</sub>
+
+If this saved you some time, a ⭐ helps other people find it. Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
