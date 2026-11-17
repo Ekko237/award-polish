@@ -1,0 +1,78 @@
+name: Bug report
+description: Report a problem with the award-polish skill or its Python helpers.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues and read the [common questions](https://github.com/Ekko237/award-polish#common-questions) first.
+        Remove secrets and personal information from all examples, transcripts, logs, and screenshots.
+  - type: input
+    id: skill-version
+    attributes:
+      label: Skill version
+      description: Which release or commit did you install? See the release or CHANGELOG.md.
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Claude Code
+        - Codex
+        - Other agent
+        - Python helper only
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Agent version and operating system
+      description: Include the agent name/version and OS/version. For helper problems, include Python and relevant package versions (such as Playwright).
+    validations:
+      required: true
+  - type: input
+    id: installation
+    attributes:
+      label: Installation method
+      description: For example, skills CLI, Claude Code plugin, Codex plugin, folder install, or running from a checkout.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: What you asked the agent to do / steps to reproduce
+      description: Include the prompt, new-site or redesign mode, and the smallest reproducible steps. Use a public URL or a sanitized example when needed.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command run
+      description: Paste the exact helper or install command and working directory, with secrets and personal paths removed. Leave blank if no command was involved.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+      description: Include error messages or screenshots when useful, after removing secrets and personal information.
+    validations:
+      required: true
+  - type: textarea
+    id: transcript
+    attributes:
+      label: Transcript excerpt or logs
+      description: Paste the part of the session that shows the problem. A few dozen lines is enough. Remove secrets and personal information first.
+      render: text
+    validations:
+      required: true

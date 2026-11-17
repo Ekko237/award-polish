@@ -1,0 +1,49 @@
+name: Feature request
+description: Suggest an improvement to the award-polish workflow, docs, or Python helpers.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues first. Describe a concrete use case for polishing browser interfaces.
+        Remove secrets and personal information from examples and logs.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Skill workflow or review process
+        - Python helper
+        - Installation or agent integration
+        - Documentation
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Skill version, agent/version, and operating system
+      description: Include the Python version for helper requests, and name the helper if applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the task, the current limitation, and whether it occurs in new-site or redesign mode.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should the skill or helper do? Give a small example and describe how you would know it worked.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or current workaround
+      description: Include any command you currently run, with secrets and personal information removed.
+    validations:
+      required: false
