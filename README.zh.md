@@ -173,6 +173,22 @@ Claude Code 和 Codex。其他能加载技能文件夹的 agent 也许能用，�
 
 可以。克隆仓库后直接跑布局体检。见[一分钟试一个工具](#一分钟试一个工具)。
 
+<details>
+<summary>文件</summary>
+
+```
+├─ skills/                 award-polish 技能：SKILL.md、scripts、references、templates
+├─ media/                  README 配图和循环演示 GIF
+├─ CHANGELOG.md            版本说明
+├─ install.sh              本地技能安装脚本
+├─ .claude-plugin/         Claude Code 市场和插件清单
+├─ .codex-plugin/          Codex 插件清单
+├─ .agents/                Codex 市场清单
+└─ .github/                issue 模板、PR 模板、脚本和 CI 工作流
+```
+
+</details>
+
 ## 许可
 
 MIT
