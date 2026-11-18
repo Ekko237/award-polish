@@ -173,6 +173,22 @@ Claude Code and Codex. Other agents that load a skill folder may work. They are 
 
 Yes. Clone the repo and run the layout checker. See [Try one tool in a minute](#try-one-tool-in-a-minute).
 
+<details>
+<summary>Layout</summary>
+
+```
+├─ skills/                 award-polish skill: SKILL.md, scripts, references, templates
+├─ media/                  README images and loop demo GIF
+├─ CHANGELOG.md            release notes
+├─ install.sh              local skill installer
+├─ .claude-plugin/         Claude Code marketplace and plugin manifests
+├─ .codex-plugin/          Codex plugin manifest
+├─ .agents/                Codex marketplace manifest
+└─ .github/                issue templates, PR template, scripts, and CI workflows
+```
+
+</details>
+
 ## License
 
 MIT

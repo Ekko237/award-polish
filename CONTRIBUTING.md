@@ -51,6 +51,7 @@ reports, and `__pycache__` directories out of the change.
 Use a descriptive branch and open a focused PR against `main`. Explain the
 problem, the change, and how you checked it; link a related issue when available.
 Update relevant instructions and both READMEs when shared guidance changes.
+If you change folder structure, update the README tree in the same PR.
 Remove secrets and personal information from examples, logs, and screenshots.
 
 Releases use `CHANGELOG.md` entries in `version - YYYY-MM-DD` format. For a
