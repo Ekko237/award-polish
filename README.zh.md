@@ -1,24 +1,87 @@
-<h1 align="center">award-polish</h1>
+# award-polish
 
-**一个打磨网站、网页应用和 App 界面的 agent 技能：拿 Awwwards 获奖站当标杆，评审分数靠得住。**
+[English](README.md) | [简体中文](README.zh.md)
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/Ekko237/award-polish?style=flat&color=24292f" alt="License: MIT" /></a>
-  &nbsp;
-  <a href="https://github.com/Ekko237/award-polish/releases/latest"><img src="https://img.shields.io/github/v/release/Ekko237/award-polish?style=flat&color=24292f" alt="Latest release" /></a>
-  &nbsp;
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-read-24292f?style=flat" alt="Changelog" /></a>
-</p>
+award-polish 是一个 Claude Code 和 Codex 技能，用同一套标准反复评审和打磨网站、网页应用和能在浏览器里打开的原型。
 
-<p align="center"><a href="README.md">English</a></p>
+## 适合谁
 
-<p align="center">
-  <img src="media/showcase-zh-v2.png" width="100%" alt="用 award-polish 打磨过的六个作品，电脑版和手机版" />
-</p>
+用 AI 做落地页、作品集或网页应用的个人开发者和小团队。比如，改版一个网页游戏首页时，可以先查手机上主按钮有没有被挡住，再把改动和目前最好的版本并排评审。
 
-已在 Claude Code 和 Codex 上测过。文件夹就是普通的 Markdown 加 Python，其他能加载技能文件夹的 agent 也许能用，但还没测过。
+## 为什么现在就试
+
+当页面已经能用、下一步却只有一句「再打磨一下」，就可以请两位独立评审用同一套标准给出完整的修改清单。每批改完，用固定样本校准评分，再和目前最好的版本并排盲评。你选定的版本是后续基准。
+
+v1.0.4 的 10 项评分标准用 5 个真实的 Awwwards 每日最佳网站和 1 个模板站校准过。10 分是顶尖每日最佳，9 分是平均每日最佳，8 分是荣誉提名。
+
+```bash
+npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
+```
+
+[用法](#快速上手) · [反馈问题](https://github.com/Ekko237/award-polish/issues) · [贡献指南](CONTRIBUTING.md) · [ClawHub](https://clawhub.ai/ekko237/skills/award-polish)
+
+## 环境要求
+
+- 安装技能需要 Git 和带 `npx` 的 Node.js。在项目目录运行上面的命令，提示选择安装范围时选 **Project**。如果终端无法交互，在命令末尾加 `-y`，按默认设置装到当前项目。
+- 完整流程需要能运行已登录的 Claude Code 或 Codex。其他能加载技能文件夹的助手尚未测试。
+- 布局检查需要 Git、Python 3（含 `venv`）、Playwright 的 Chromium 和 Pillow。下面的例子会安装 Python 依赖和浏览器，无需登录。
+- `asset_check.py` 另需 beautifulsoup4 和 tinycss2。 `seo_keep.py` 另需 requests 和 beautifulsoup4。
+
+## 快速上手
+
+### 先跑一次本地布局检查
+
+在空目录里运行以下命令。示例页面由本地 Python 服务提供。首次安装要下载 Chromium。
+
+```bash
+git clone https://github.com/Ekko237/award-polish
+cd award-polish
+python3 -m venv .venv
+.venv/bin/python -m pip install playwright pillow
+.venv/bin/python -m playwright install chromium
+mkdir demo
+cat > demo/index.html <<'HTML'
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout check demo</title>
+<h1>Layout check demo</h1>
+<button id="start" style="min-height:44px">Start</button>
+</html>
+HTML
+.venv/bin/python -m http.server 8765 --bind 127.0.0.1 --directory demo
+```
+
+打开第二个终端，进入刚克隆的 `award-polish` 目录，运行检查。
+
+```bash
+.venv/bin/python skills/award-polish/scripts/layout_check.py http://127.0.0.1:8765/ --out check --keep 'start=#start'
+```
+
+打开 `check/report.json`，查看横向溢出、文字截断和 `Start` 按钮是否完整露出、有没有被遮挡。`check/` 中还有 375、768、1024、1280 和 1440 像素宽的截图。完成后，在第一个终端按 Ctrl+C 停掉服务。
+
+### 启动打磨流程
+
+按上面的方式安装到项目后，可以在 `.agents/skills/award-polish/SKILL.md` 找到技能。安装器也会为 Claude Code 建立链接。在项目里打开 Claude Code 或 Codex，告诉它「按 award-polish 打磨这个网站。先检查本地首页，保留现有主流程」。查看项目根目录的 `ITERATION_LOG.md`，确认第一行写的是新建网站还是改版。[完整流程](skills/award-polish/SKILL.md) · [脚本用法](skills/award-polish/references/scripts.md)
+
+## 什么时候不适合用
+
+- 只需修一个已知的 CSS 问题时，直接修复并检查受影响的页面更省事。
+- 原生界面无法在浏览器中打开时，布局检查无法运行。
+- 如果你需要保证获奖，这个流程无法提供保证。Awwwards 是对照标准，下面的项目都没有获得过 Awwwards 奖项。
+
+## 和其他做法相比
+
+| 做法 | 适用场景 | 得到什么 |
+| --- | --- | --- |
+| 手动看页面 | 已知问题，改动范围小 | 针对具体页面和状态的检查 |
+| 只跑布局检查 | 想找多种屏宽下的布局问题 | 五种宽度的截图和 JSON 报告 |
+| 完整 award-polish 流程 | 想分批改进视觉、交互和动效 | 两位独立评审、校准后的评分和并排盲评 |
 
 ## 用它打磨过的作品
+
+![六个项目的桌面和移动端截图](media/showcase-zh-v2.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。
@@ -27,42 +90,9 @@
 - [顺路侠](https://ekko237.github.io/shunluxia-campus-errand/?lang=zh)（[源码](https://github.com/Ekko237/shunluxia-campus-errand)）：校园跑腿互助 App 原型。
 - [三角洲国际服改枪码](https://dfgqm.com/)：游戏改枪码站，做了两轮改版。
 
-同一份需求，大家做出来的功能差不多，一个产品能不能拉开差距，靠的是视觉、交互、动效和流畅度。光靠 AI 自己打磨很难做好：它给自己打分偏松，小修小补会卡住，「做得更好」也没有终点。这个技能把打磨变成一个有尺子的循环。
+![在终端演示布局检查和并排盲评](media/loop.gif)
 
-能在浏览器里打开的界面都适用，网站、网页应用、触屏原型、平板和手机上的 App 界面都行，因为检查脚本靠无头浏览器来跑。
-
-Awwwards 只是我们对照的标杆，上面这些作品还没有一个拿过 Awwwards 奖。
-
-循环怎么走：
-
-- **先看标杆**：实际打开 6-8 个近期同类的 Awwwards / Webby / FWA 获奖站，记下能借的手法。
-- **按批推进**：评审一次给出完整问题清单，AI 一口气改完，一条改动一个提交，再请下一次评审。
-- **评审靠得住**：每次开两个没参与开发的新评审；用一份固定的定标卷抵消评审偏严或偏松；这一批算不算数，看它和目前最好版本的逐项盲比。10 项打分的尺子拿 5 个真实的 Site of the Day 和 1 个模板站校准过：10 分 = 顶尖 SOTD，9 分 = 一般 SOTD，8 分 = Honorable Mention。
-- **最后由你拍板**：定期把前后对比图发给你，因为 AI 评审会集体看走眼；你挑中的版本就是基准，评审分再高也不推翻。
-- **刹车写全**：截止时间、卡住、没进展、来回摆，各有处理办法。
-- **黑客松和多人协作**：标准不降，设计挪到开赛前做，打磨跟着团队的检查点。
-
-![终端里的循环：在演示站上一批改动前后的布局体检，再由盲比定出新的最好版本](media/loop.gif)
-
-## 一分钟试一个工具
-
-布局体检脚本对任何网站都能用，不用先装技能：
-
-```bash
-git clone https://github.com/Ekko237/award-polish && cd award-polish
-pip install playwright pillow && playwright install chromium
-python3 skills/award-polish/scripts/layout_check.py https://你的网站 --out check --keep "main=.你的主按钮"
-```
-
-会得到 375、768、1024、1280、1440 五档宽度的截图和 `check/report.json`：横向溢出、被裁掉的描边和阴影、被截断的文字、超过两行的标题、控制台报错、坏图、小于 44px 的点击区、实际显示小于 12px 的字，还有主按钮在不在第一屏、有没有被横幅盖住。
-
-## 安装
-
-```bash
-npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
-```
-
-这条命令用 [`npx skills`](https://github.com/vercel-labs/agent-skills) 命令行安装这个技能。
+## 其他安装方式
 
 <details>
 <summary>Claude Code 插件</summary>
@@ -86,12 +116,6 @@ codex plugin add award-polish@award-polish
 ```
 
 </details>
-
-这两条命令只安装技能。Python 包要另外装：Python 3、Playwright 的 Chromium 和 Pillow。`asset_check.py` 还要 beautifulsoup4 和 tinycss2，`seo_keep.py` 要 requests 和 beautifulsoup4。可选：一个前端设计技能（比如 design-taste-frontend），以及一个生图工具。
-
-验证：说「把这个网站打磨到获奖水平」。你应该看到一段短回复，以及 `ITERATION_LOG.md`，第一行写明模式（新站或改版）。
-
-技能正文是英文。回复仍用你的语言。
 
 <details>
 <summary>文件夹安装</summary>
@@ -129,68 +153,6 @@ Windows 可以把 `skills/award-polish` 复制到 `%USERPROFILE%\.claude\skills\
 
 </details>
 
-## 里面有什么
+## 许可证
 
-- `skills/award-polish/SKILL.md`：循环本身（目标、过程、检查迭代）、收工条件和红线。
-- `skills/award-polish/references/`：新站和改版两种模式、怎么看获奖站、打分的尺子、怎么开评审、打磨清单、上线、黑客松，以及从真实项目里攒下的经验。
-- `skills/award-polish/templates/`：任务说明、迭代日志、评审提示词和评审配置。
-
-`skills/award-polish/scripts/`（用法见 `skills/award-polish/references/scripts.md`），都在真实网站上跑过：
-
-| 脚本 | 做什么 |
-| --- | --- |
-| `layout_check.py` | 多宽度截图和布局检查、首屏关键元素、操作后的状态。 |
-| `record_moment.py` | 用虚拟时钟逐格录动效，评审看静态图也能打动效分。 |
-| `sound_levels.py` | 逐步记录音量电平，给在无头浏览器里听不到声音的评审看。 |
-| `review_prompt.py` | 生成盲评提示词，截图换成看不出版本的目录名。 |
-| `calibrate.py` | 定标卷校正、取平均、Awwwards 加权分，并按盲比定结论。 |
-| `side_by_side.py` | 从网址或图片拼出带标签的前后对比图。 |
-| `seo_keep.py` | 对照改版前后的标题、描述、规范链接和结构化数据，改版不丢搜索字段。 |
-| `wait_live.py` | 等线上页面和它引用的样式、脚本真的换成新版本。 |
-| `asset_check.py` | 不开浏览器，查全站每个页面引用的本地文件在不在。 |
-| `snapshot.py` | 给评审的快照只从提交导出，没提交的文件不会变成 404。 |
-| `split_commits.py` | 工作区攒了几件改动时，按关键词拆成一件一个提交。 |
-
-## 常见问题
-
-**一定要拿过 Awwwards 奖吗？**
-
-Awwwards 是这个循环对照的标杆。上面这些作品还没有一个拿过 Awwwards 奖。
-
-**检查器用的是哪个浏览器？**
-
-Playwright 的无头 Chromium。布局、动效、音量、前后对比和上线等待这些脚本都启动这个 Chromium。
-
-**会改我的 SEO 吗？**
-
-改版时会保住站上已有的搜索字段：标题、描述、规范链接、hreflang、结构化数据、H1 和分享卡片。`seo_keep.py` 对比线上和本地新版本，有差异就不放行。评审建议改 H1、标题或描述时，除非你同意，否则不改。
-
-**在哪些 agent 上测过？**
-
-Claude Code 和 Codex。其他能加载技能文件夹的 agent 也许能用，还没测过。
-
-**不装技能，能先试一下吗？**
-
-可以。克隆仓库后直接跑布局体检。见[一分钟试一个工具](#一分钟试一个工具)。
-
-<details>
-<summary>文件</summary>
-
-```
-├─ skills/                 award-polish 技能：SKILL.md、scripts、references、templates
-├─ media/                  README 配图和循环演示 GIF
-├─ CHANGELOG.md            版本说明
-├─ install.sh              本地技能安装脚本
-├─ .claude-plugin/         Claude Code 市场和插件清单
-├─ .codex-plugin/          Codex 插件清单
-├─ .agents/                Codex 市场清单
-└─ .github/                issue 模板、PR 模板、脚本和 CI 工作流
-```
-
-</details>
-
-## 许可
-
-MIT
-
-<sub>用过了？开一个 issue，告诉我哪里坏了，或者你做出了什么。</sub>
+[MIT](LICENSE) · [更新日志](CHANGELOG.md)
