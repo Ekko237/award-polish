@@ -4,6 +4,10 @@
 
 award-polish 是一个 Claude Code 和 Codex 技能，用同一套标准反复评审和打磨网站、网页应用和能在浏览器里打开的原型。
 
+![六个项目的桌面和移动端截图](media/showcase-zh-v2.png)
+
+用 award-polish 打磨过的六个作品，电脑端和手机端截图。
+
 ## 适合谁
 
 用 AI 做落地页、作品集或网页应用的个人开发者和小团队。比如，改版一个网页游戏首页时，可以先查手机上主按钮有没有被挡住，再把改动和目前最好的版本并排评审。
@@ -80,8 +84,6 @@ HTML
 | 完整 award-polish 流程 | 想分批改进视觉、交互和动效 | 两位独立评审、校准后的评分和并排盲评 |
 
 ## 用它打磨过的作品
-
-![六个项目的桌面和移动端截图](media/showcase-zh-v2.png)
 
 - [Island Evolution](https://islandevolution.com/)：像素解谜游戏的官网，最值得看的是往下滚动时一步步演示一局游戏的那一段。
 - [今食喵 Today's Mealow](https://mealow.app/)：让小猫从附近真实的店里帮你挑吃什么的网页应用。

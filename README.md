@@ -4,6 +4,10 @@
 
 award-polish is a Claude Code and Codex skill for reviewing and refining websites, web apps, and browser-based prototypes in batches.
 
+![Desktop and mobile screenshots of six projects](media/showcase-v2.png)
+
+Desktop and mobile screenshots of six projects polished with this skill.
+
 ## Who it's for
 
 Indie developers and small teams using AI to build landing pages, portfolios, or web apps. If you're redesigning a browser game's homepage, for example, check whether the main button is visible on mobile, then compare the redesign with the best version so far.
@@ -80,8 +84,6 @@ With the project install above, look for `.agents/skills/award-polish/SKILL.md`.
 | Full award-polish workflow | You want to refine visuals, interaction, and motion in batches | Two independent reviewers, calibrated scores, and a blind side-by-side review |
 
 ## Polished with award-polish
-
-![Desktop and mobile screenshots of six projects](media/showcase-v2.png)
 
 - [Island Evolution](https://islandevolution.com/): a browser puzzle game's website; the scroll-driven walkthrough of one game is the part to see.
 - [Today's Mealow](https://mealow.app/): a web app where a cat picks what you eat from real places nearby.
