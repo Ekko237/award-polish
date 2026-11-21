@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh.md)
 
-award-polish is a Claude Code and Codex skill for reviewing and refining websites, web apps, and browser-based prototypes in batches.
+award-polish works with Claude Code, Codex, Cursor, and other AI agents supported by `npx skills` for reviewing and refining websites, web apps, and browser-based prototypes in batches.
 
 ![Desktop and mobile screenshots of six projects](media/showcase-v2.png)
 
@@ -18,16 +18,26 @@ When the page already works and the next instruction is “make it better,” tw
 
 The v1.0.4 release uses a 10-item rubric calibrated on five real Awwwards Sites of the Day and one template site. A 10 means top Site of the Day, 9 means average Site of the Day, and 8 means Honorable Mention.
 
+## Install
+
+Option 1 — **Command** (installs the skill into `.agents/skills/award-polish` in the current project; add `-y` in non-interactive terminals if needed):
+
 ```bash
-npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
+npx skills add https://github.com/Ekko237/award-polish --skill award-polish
+```
+
+Option 2 — **Prompt** (paste into Claude Code, Codex, Cursor, or another supported agent to run on demand without installing):
+
+```text
+Run `npx skills use "https://github.com/Ekko237/award-polish" --skill "award-polish"` and follow the generated skill instructions now. Read its complete output, redirecting it to a temporary file first if necessary. Resolve relative paths from the supporting-files directory it provides.
 ```
 
 [Quick use](#quick-use) · [Report an issue](https://github.com/Ekko237/award-polish/issues) · [Contributing](CONTRIBUTING.md) · [ClawHub](https://clawhub.ai/ekko237/skills/award-polish)
 
 ## Requirements
 
-- To install the skill, use Git and Node.js with `npx`. Run the command above in your project directory and choose **Project** when asked for an install scope. In a non-interactive terminal, append `-y` to accept the default project install.
-- The full workflow requires a signed-in Claude Code or Codex session. Other agents that load skill folders are untested.
+- The **Command** (`npx skills add`) and **Prompt** (`npx skills use`) paths use Git and Node.js with `npx` and work with Claude Code, Codex, Cursor, and other agents supported by `npx skills`. The command installs `./.agents/skills/award-polish/SKILL.md` in the current project; append `-y` if a non-interactive terminal prompts for confirmation. The prompt runs on demand without pre-installing.
+- The workflow has been tested with signed-in Claude Code and Codex sessions.
 - The layout checker uses Git, Python 3 with `venv`, Playwright's Chromium, and Pillow. The example below installs the Python packages and browser and runs without an agent login.
 - `asset_check.py` also needs beautifulsoup4 and tinycss2. `seo_keep.py` also needs requests and beautifulsoup4.
 
@@ -67,7 +77,7 @@ Open `check/report.json` for results such as horizontal overflow, truncated text
 
 ### Start the polish workflow
 
-With the project install above, look for `.agents/skills/award-polish/SKILL.md`. The installer also links the skill for Claude Code. Open Claude Code or Codex in your project and ask “Use award-polish on this site. Start with the local homepage and preserve the existing core flow.” Check that the first line of `ITERATION_LOG.md` in your project identifies the mode as a new site or a redesign. [Full workflow](skills/award-polish/SKILL.md) · [Script usage](skills/award-polish/references/scripts.md)
+Use the **Command** option to install the skill at `.agents/skills/award-polish/SKILL.md`, or paste the **Prompt** option to run it on demand without pre-installing. Open Claude Code, Codex, Cursor, or another supported agent in your project and ask “Use award-polish on this site. Start with the local homepage and preserve the existing core flow.” Check that the first line of `ITERATION_LOG.md` in your project identifies the mode as a new site or a redesign. [Full workflow](skills/award-polish/SKILL.md) · [Script usage](skills/award-polish/references/scripts.md)
 
 ## When not to use it
 
@@ -94,7 +104,7 @@ With the project install above, look for `.agents/skills/award-polish/SKILL.md`.
 
 ![Terminal demo of a layout check and blind side-by-side review](media/loop.gif)
 
-## Other ways to install
+## Other install methods
 
 <details>
 <summary>Claude Code plugin</summary>

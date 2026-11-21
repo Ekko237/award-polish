@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh.md)
 
-award-polish 是一个 Claude Code 和 Codex 技能，用同一套标准反复评审和打磨网站、网页应用和能在浏览器里打开的原型。
+award-polish 可配合 Claude Code、Codex、Cursor 和其他受 `npx skills` 支持的 AI Agent，用同一套标准反复评审和打磨网站、网页应用和能在浏览器里打开的原型。
 
 ![六个项目的桌面和移动端截图](media/showcase-zh-v2.png)
 
@@ -18,16 +18,26 @@ award-polish 是一个 Claude Code 和 Codex 技能，用同一套标准反复�
 
 v1.0.4 的 10 项评分标准用 5 个真实的 Awwwards 每日最佳网站和 1 个模板站校准过。10 分是顶尖每日最佳，9 分是平均每日最佳，8 分是荣誉提名。
 
+## 安装
+
+选项 1 — **Command**（将技能安装到当前项目的 `.agents/skills/award-polish`；在无法交互的终端中需要时可加 `-y`）：
+
 ```bash
-npx skills add https://github.com/Ekko237/award-polish -a claude-code -a codex
+npx skills add https://github.com/Ekko237/award-polish --skill award-polish
+```
+
+选项 2 — **Prompt**（粘贴到 Claude Code、Codex、Cursor 或其他受支持的 Agent 中按需运行，无需预先安装）：
+
+```text
+Run `npx skills use "https://github.com/Ekko237/award-polish" --skill "award-polish"` and follow the generated skill instructions now. Read its complete output, redirecting it to a temporary file first if necessary. Resolve relative paths from the supporting-files directory it provides.
 ```
 
 [用法](#快速上手) · [反馈问题](https://github.com/Ekko237/award-polish/issues) · [贡献指南](CONTRIBUTING.md) · [ClawHub](https://clawhub.ai/ekko237/skills/award-polish)
 
 ## 环境要求
 
-- 安装技能需要 Git 和带 `npx` 的 Node.js。在项目目录运行上面的命令，提示选择安装范围时选 **Project**。如果终端无法交互，在命令末尾加 `-y`，按默认设置装到当前项目。
-- 完整流程需要能运行已登录的 Claude Code 或 Codex。其他能加载技能文件夹的助手尚未测试。
+- **Command**（`npx skills add`）和 **Prompt**（`npx skills use`）都需要 Git 和带 `npx` 的 Node.js，可用于 Claude Code、Codex、Cursor 和其他受 `npx skills` 支持的 Agent。命令会把技能安装到当前项目的 `./.agents/skills/award-polish/SKILL.md`；如果无法交互的终端提示确认，末尾追加 `-y`。Prompt 会按需运行，无需预先安装。
+- 已在已登录的 Claude Code 和 Codex 会话中测试过完整流程。
 - 布局检查需要 Git、Python 3（含 `venv`）、Playwright 的 Chromium 和 Pillow。下面的例子会安装 Python 依赖和浏览器，无需登录。
 - `asset_check.py` 另需 beautifulsoup4 和 tinycss2。 `seo_keep.py` 另需 requests 和 beautifulsoup4。
 
@@ -67,7 +77,7 @@ HTML
 
 ### 启动打磨流程
 
-按上面的方式安装到项目后，可以在 `.agents/skills/award-polish/SKILL.md` 找到技能。安装器也会为 Claude Code 建立链接。在项目里打开 Claude Code 或 Codex，告诉它「按 award-polish 打磨这个网站。先检查本地首页，保留现有主流程」。查看项目根目录的 `ITERATION_LOG.md`，确认第一行写的是新建网站还是改版。[完整流程](skills/award-polish/SKILL.md) · [脚本用法](skills/award-polish/references/scripts.md)
+使用 **Command** 选项会把技能安装到 `.agents/skills/award-polish/SKILL.md`；也可以粘贴 **Prompt** 选项按需运行，无需预先安装。在项目里打开 Claude Code、Codex、Cursor 或其他受支持的 Agent，告诉它「按 award-polish 打磨这个网站。先检查本地首页，保留现有主流程」。查看项目根目录的 `ITERATION_LOG.md`，确认第一行写的是新建网站还是改版。[完整流程](skills/award-polish/SKILL.md) · [脚本用法](skills/award-polish/references/scripts.md)
 
 ## 什么时候不适合用
 
